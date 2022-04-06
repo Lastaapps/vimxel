@@ -1,5 +1,3 @@
-# Base structure provided by Jiří Kašpar, thanks a lot
-
 # C++ compiler
 CXX	=	g++
 
@@ -10,8 +8,7 @@ ifeq ($(DEBUG),true)
 else
 	CXXFLAGSDEBUG	= -g3 -fsanitize=address
 endif
-CXXFLAGSRELEASE	=	-std=c++17 -pedantic -Wall
-CXXFLAGS	=	$(CXXFLAGSRELEASE) $(CXXFLAGSDEBUG)
+CXXFLAGS	=	-std=c++17 -pedantic -Wall $(CXXFLAGSDEBUG)
 
 # External libraries used
 LIBS	=	-lncourser
@@ -20,14 +17,29 @@ LFLAGS =
 # My username, used as output filename
 USERNAME =	lastope2
 
-# all .o modules to make
-# find . -name '*.cpp' | sed 's/.cpp/.o/g' | sed 's/\.\///' | tr '\n' ' '
-MODULES	= src/main.o src/table/table.o
+# all the source and generated files
+#
+# Creates a recursive make function
+# Searches for files in a specific dir
+# @param 1 - folder to search in
+# @param 2 - pattern to search for
+# source: https://stackoverflow.com/a/12959764
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-# all programs to build
-# find . -name '*.cpp' | sed 's/.cpp//g' | sed 's/\.\///' | tr '\n' ' '
-ALL	= src/main
+SOURCES := $(call rwildcard,src/,*.cpp)
+OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
+DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
+HEADERS := $(call rwildcard,src/,*.hpp) $(call rwildcard,src/,*.h)
+#SOURCES := $(shell find . -name '*.cpp' | sed 's/\.\///' )
+#HEADERS := $(shell find . -name '*.hpp' -or -name '*.h' | sed 's/\.\///' )
 
+# These task will be run also if files of their name exists
+.PHONY: all clean doc run compile
+
+
+
+
+# --- DEFAULT, CORE ------------------------------------------------------------
 # build all
 default:	all
 all:	compile doc
@@ -35,37 +47,42 @@ all:	compile doc
 # Build executable file
 compile:	$(USERNAME)
 
-# Runs compiled code
+# Runs compiled binary
 run:
 	@./$(USERNAME)
 
+
+
+
+# --- DOCS ---------------------------------------------------------------------
 # Create documentation in the doc/ folder
-doc:
+doc: doc/html/index.html
+
+doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile
+	@doxygen
 
 
-# make dependencies
-depend:
-	cp Makefile Makefile_tmp
-	awk -f Makefile_depend_reset.awk Makefile_tmp > Makefile
-	rm Makefile_tmp
-	find . -name "*.cpp" -exec $(CXX) -MM {} + >> Makefile
 
+
+# --- CLEAN UP -----------------------------------------------------------------
 # clean up
-# delete .o files, executables, final executable and code dumps
+# delete .o files, .d files, final executable, doc and memory dumps
 clean:
-	rm -f $(MODULES) $(ALL) $(USERNAME) core
+	rm -f $(OBJECTS) $(DEPENDS) $(USERNAME) core
+	rm -fr doc
 
+
+
+
+# --- COMPILATION --------------------------------------------------------------
 # link the final program
-$(USERNAME) : $(MODULES) Makefile
-	$(CXX) $(LFLAGS) $(MODULES) -o $@
+$(USERNAME) : $(OBJECTS) Makefile
+	$(CXX) $(LFLAGS) $(OBJECTS) -o $@
 
-# compile a C++ module
+# includes .d files as dependencies
+-include	$(DEPENDS)
+
+# compile a C++ module and create .d files
 %.o : %.cpp Makefile
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-# Task dependency graph
-# output of g++ -MM *.cpp
-# The line below is used as a marker for awk script
-# DELETE_THESE_UNDER_ME_ON_DEPEND
-main.o: src/main.cpp src/table/table.hpp
-table.o: src/table/table.cpp src/table/table.hpp

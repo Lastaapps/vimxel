@@ -1,3 +1,5 @@
 lastope2
 *.o
+*.d
+doc/
 .vscode/
