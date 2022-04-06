@@ -1,46 +1,71 @@
-# Provided by Jiří Kašpar, thanks a lot
-# PA2 Makefile template
-CC	=	gcc
+# Base structure provided by Jiří Kašpar, thanks a lot
+
+# C++ compiler
 CXX	=	g++
-CXXFLAGS	=       -std=c++17 -pedantic -Wall
-CFLAGS	= 	-Wall -pedantic -g3 -fsanitize=address
+
+# C++ compiler options
+DEBUG	= true
+ifeq ($(DEBUG),true)
+	CXXFLAGSDEBUG	=
+else
+	CXXFLAGSDEBUG	= -g3 -fsanitize=address
+endif
+CXXFLAGSRELEASE	=	-std=c++17 -pedantic -Wall
+CXXFLAGS	=	$(CXXFLAGSRELEASE) $(CXXFLAGSDEBUG)
+
+# External libraries used
 LIBS	=	-lncourser
+# Linker options
 LFLAGS =
+# My username, used as output filename
+USERNAME =	lastope2
 
 # all .o modules to make
-#         ls *.cpp | sed 's/.cpp/.o/g' | tr '\n' ' '
-MODULES	=
+# find . -name '*.cpp' | sed 's/.cpp/.o/g' | sed 's/\.\///' | tr '\n' ' '
+MODULES	= src/main.o src/table/table.o
 
 # all programs to build
-#         ls *.cpp | sed 's/.cpp//g' | tr '\n' ' '
-ALL	= main
+# find . -name '*.cpp' | sed 's/.cpp//g' | sed 's/\.\///' | tr '\n' ' '
+ALL	= src/main
 
 # build all
-default:	$(ALL) $(MODULES)
+default:	all
+all:	compile doc
+
+# Build executable file
+compile:	$(USERNAME)
+
+# Runs compiled code
+run:
+	@./$(USERNAME)
+
+# Create documentation in the doc/ folder
+doc:
+
 
 # make dependencies
 depend:
 	cp Makefile Makefile_tmp
-	cat Makefile_tmp | awk -f Makefile_depend_reset.awk > Makefile
+	awk -f Makefile_depend_reset.awk Makefile_tmp > Makefile
 	rm Makefile_tmp
-	g++ -MM *.cpp >> Makefile
+	find . -name "*.cpp" -exec $(CXX) -MM {} + >> Makefile
 
 # clean up
+# delete .o files, executables, final executable and code dumps
 clean:
-	rm -f $(MODULES) $(ALL) core
+	rm -f $(MODULES) $(ALL) $(USERNAME) core
 
-# link a program from several modules
-#prog : $(MODULES) Makefile
-#	$(CXX) $(LFLAGS) $(MODULES) -o $@
-
-# compile & link a C++ program
-% : %.cpp Makefile
-	$(CXX) $(CXXFLAGS) $< $(LFLAGS) $(MODULES) -o $@
+# link the final program
+$(USERNAME) : $(MODULES) Makefile
+	$(CXX) $(LFLAGS) $(MODULES) -o $@
 
 # compile a C++ module
 %.o : %.cpp Makefile
-	$(CXX)  $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# here add output of "g++ -MM *.cpp >>Makefile"
-# DELETE_ME
-main.o: main.cpp
+# Task dependency graph
+# output of g++ -MM *.cpp
+# The line below is used as a marker for awk script
+# DELETE_THESE_UNDER_ME_ON_DEPEND
+main.o: src/main.cpp src/table/table.hpp
+table.o: src/table/table.cpp src/table/table.hpp

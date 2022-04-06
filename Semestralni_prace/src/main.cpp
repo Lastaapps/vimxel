@@ -1,7 +1,8 @@
 #include <iostream>
+#include "table/table.hpp"
 using namespace std;
 
 int main(void) {
-    cout << "Hello word!" << endl;
+    foo();
     return 0;
 }
