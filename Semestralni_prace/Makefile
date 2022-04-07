@@ -32,7 +32,6 @@ DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 HEADERS := $(call rwildcard,src/,*.hpp) $(call rwildcard,src/,*.h)
 
 TEST_FILE = test
-#TEST_SOURCES := $(call rwildcard,tests/,*.cpp) $(filter-out src/cz/lastaapps/vimxel/main.cpp, $(SOURCES))
 TEST_SOURCES := $(call rwildcard,tests/,*.cpp) $(filter-out $(call rwildcard,src/,main.cpp), $(SOURCES))
 TEST_OBJECTS := $(patsubst %.cpp,%.o,$(TEST_SOURCES))
 TEST_DEPENDS := $(patsubst %.cpp,%.d,$(TEST_SOURCES))
