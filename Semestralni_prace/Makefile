@@ -11,7 +11,7 @@ endif
 CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra -O3 $(CXXFLAGSDEBUG)
 
 # External libraries used
-LIBS	=	-lncourser
+LIBS	=	-lncurses
 # Linker options
 LFLAGS =
 # My username, used as output filename
@@ -66,12 +66,12 @@ runTest:
 # --- COMPILATION --------------------------------------------------------------
 # link the final program
 $(USERNAME) : $(OBJECTS) Makefile
-	$(CXX) $(LFLAGS) $(OBJECTS) -o $@
+	$(CXX) $(LFLAGS) $(LIBS) $(OBJECTS) -o $@
 	@echo compiled!
 
 # link tests
 $(TEST_FILE) : $(TEST_OBJECTS) Makefile
-	$(CXX) $(LFLAGS) $(TEST_OBJECTS) -o $@
+	$(CXX) $(LFLAGS) $(LIBS) $(TEST_OBJECTS) -o $@
 	@echo compiled!
 
 # includes .d files as dependencies

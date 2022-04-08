@@ -10,13 +10,28 @@ class Coordinates final {
 	size_t mX, mY;
 
    public:
+	Coordinates();
+	Coordinates(const Coordinates& src);
+	Coordinates(Coordinates&& src);
 	Coordinates(size_t x, size_t y);
-	Coordinates(size_t x, const string& y);
+	Coordinates(const string& x, size_t y);
+	~Coordinates();
+	Coordinates& operator=(Coordinates src);
+
 	bool operator==(const Coordinates& other) const;
+	bool operator!=(const Coordinates& other) const;
 	bool operator<(const Coordinates& other) const;
+
 	size_t x() const;
 	size_t y() const;
-	const string yString() const;
+	const string xString() const;
+
+	Coordinates withX(const size_t val = 0) const;
+	Coordinates withY(const size_t val = 0) const;
+	Coordinates incX(const size_t by = 1) const;
+	Coordinates incY(const size_t by = 1) const;
+	Coordinates decX(const size_t by = 1) const;
+	Coordinates decY(const size_t by = 1) const;
 
    private:
 	static constexpr uint8_t aToZ = 'Z' - 'A' + 1;
