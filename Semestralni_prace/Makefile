@@ -37,8 +37,11 @@ TEST_OBJECTS := $(patsubst %.cpp,%.o,$(TEST_SOURCES))
 TEST_DEPENDS := $(patsubst %.cpp,%.d,$(TEST_SOURCES))
 TEST_HEADERS := $(call rwildcard,tests/,*.hpp) $(call rwildcard,tests/,*.h) $(filter-out $(call rwildcard,src/,main.hpp) $(call rwildcard,src/,main.h), $(HEADERS))
 
+EXAMPLES := $(wildcard examples/**)
+ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) Doxyfile Makefile zadani.txt prohlaseni.txt
+
 # These task will be run also if files of their name exists
-.PHONY: all clean doc run compile
+.PHONY: default all compile run compile_test run_test doc zip clean
 
 
 
@@ -56,8 +59,8 @@ run:
 	@./$(USERNAME)
 
 # Tests
-compileTest:	$(TEST_FILE)
-runTest:
+compile_test:	$(TEST_FILE)
+run_test:
 	@./$(TEST_FILE)
 
 
@@ -95,12 +98,24 @@ doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile zadani.txt
 
 
 
+# --- ZIP ----------------------------------------------------------------------
+zip: $(USERNAME).zip
+
+$(USERNAME).zip: $(ZIP)
+	@mkdir -p zip_tmp/$(USERNAME)
+	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
+	cd zip_tmp/ && zip -r ../$@ $(USERNAME)/
+	@rm -fr zip_tmp
+
+
+
 
 # --- CLEAN UP -----------------------------------------------------------------
 # clean up
 # delete .o files, .d files, final executable, doc and memory dumps
 clean:
-	rm -f $(OBJECTS) $(DEPENDS) $(USERNAME)
+	rm -f $(USERNAME) $(USERNAME).zip
+	rm -f $(OBJECTS) $(DEPENDS)
 	rm -f $(TEST_OBJECTS) $(TEST_DEPENDS) $(TEST_FILE)
 	rm -f core
 	rm -fr doc
