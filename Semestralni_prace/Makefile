@@ -88,8 +88,10 @@ $(TEST_FILE) : $(TEST_OBJECTS) Makefile
 # Create documentation in the doc/ folder
 doc: doc/html/index.html
 
-doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile
+doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile zadani.txt
+	@cp zadani.txt zadani.md
 	@doxygen
+	@rm zadani.md
 
 
 
