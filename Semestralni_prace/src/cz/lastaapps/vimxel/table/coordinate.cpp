@@ -39,6 +39,13 @@ bool Coordinates::operator<(const Coordinates& other) const {
 	return mY < other.mY;
 }
 
+Coordinates Coordinates::operator+(const Coordinates& other) const {
+	return Coordinates(mX + other.mX, mY + other.mY);
+}
+Coordinates Coordinates::operator-(const Coordinates& other) const {
+	return Coordinates(mX - other.mX, mY - other.mY);
+}
+
 Coordinates Coordinates::withX(const size_t val) const {
 	return Coordinates(val, mY);
 }

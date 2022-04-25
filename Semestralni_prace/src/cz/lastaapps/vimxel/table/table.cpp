@@ -25,9 +25,35 @@ void Table::updateCell(const Coordinates& coord, const Cell& cell) {
 	else
 		// insert/update
 		mMap.insert_or_assign(coord, unique_ptr<const Cell>(&cell));
+
+	updateContracts(coord);
 }
 inline void Table::deleteCell(const Coordinates& coord) {
 	updateCell(coord, emptyCell);
+}
+shared_ptr<CellContract> Table::createCellContract() {
+	class TableCellContract final : public CellContract {
+		const Table& mT;
+		public:
+		TableCellContract(const Table & t) : mT(t) {}
+		string getDataAt(const Coordinates & coord) const override {
+			return mT.getCell(coord).getContent();
+		}
+	};
+	auto ptr = shared_ptr<CellContract>(dynamic_cast<CellContract*>(new TableCellContract(*this)));
+	mContracts.push_back(ptr);
+	return ptr;
+}
+void Table::updateContracts(const Coordinates& coord) {
+	for (size_t i = 0; i < mContracts.size(); i++) {
+		auto ptr = mContracts[i];
+		if (ptr.use_count() <= 1) {
+			mContracts.erase(mContracts.begin() + i);
+			i--;
+		} else {
+			ptr -> dataUpdatedAt(coord);
+		}
+	}
 }
 
 }  // namespace cz::lastaapps::vimxel::table

@@ -159,7 +159,7 @@ void Display::drawSeparatingLines() {
 	mvhline(scrSize.y() - vimHeight - 1, 0, 0, scrSize.x());
 	mvvline(0, rowNamesWidth, 0, scrSize.y() - 1);
 	mvaddch(colNamesHeight, rowNamesWidth, ACS_PLUS);
-	mvaddch(scrSize.y() - vimHeight - 1, rowNamesWidth, ACS_PLUS);
+	mvaddch(scrSize.y() - vimHeight - 1, rowNamesWidth, ACS_BTEE);
 	move(0, 0);
 }
 void Display::refreshWindows() {

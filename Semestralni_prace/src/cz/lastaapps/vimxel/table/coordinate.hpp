@@ -22,6 +22,9 @@ class Coordinates final {
 	bool operator!=(const Coordinates& other) const;
 	bool operator<(const Coordinates& other) const;
 
+	Coordinates operator + (const Coordinates& other) const;
+	Coordinates operator - (const Coordinates& other) const;
+
 	size_t x() const;
 	size_t y() const;
 	const string xString() const;
