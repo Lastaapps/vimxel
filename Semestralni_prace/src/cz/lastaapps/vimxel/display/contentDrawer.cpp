@@ -21,20 +21,41 @@ void ContentDrawer::init() {
 	mCntr->registerCallback(
 	    [this](const Coordinates& coord) { renderItem(coord); });
 }
-void ContentDrawer::draw() {
+void ContentDrawer::selectPos(
+    const table::Coordinates& pos,
+    const table::Coordinates& viewPort) {
+        if (mViewPort != viewPort) {
+            mPos = pos;
+            mViewPort = viewPort;
+            draw();
+        } else {
+            Coordinates old = mPos;
+            mPos = pos;
+            renderItem(old);
+            renderItem(mPos);
+        }
+	wrefresh(mWin);
 }
-inline Coordinates ContentDrawer::getCellsCount() const {
+void ContentDrawer::draw() {
+    const size_t vX = mViewPort.x();
+    const size_t vY = mViewPort.y();
+    for (size_t x = 0; x < cellCount.x(); x++)
+		for (size_t y = 0; y < cellCount.y(); y++)
+            renderItem(Coordinates(x + vX, y + vY));
+	wrefresh(mWin);
+}
+Coordinates ContentDrawer::getCellsCount() const {
     return Coordinates(mWinSize.x() / mColWidth, mWinSize.y() / mRowHeight);
 }
-inline void ContentDrawer::renderItem(const Coordinates& coord) {
+void ContentDrawer::renderItem(const Coordinates& coord) {
     const Coordinates point = getRealPoint(coord);
     const string content = mCntr -> getDataAt(coord);
     const bool selected = isSelected(coord);
     if (selected) wattron(mWin, A_STANDOUT);
-    mvwprintw(mWin, point.y(), point.x(), "%.*s", (int)mColWidth, content.c_str());
+    mvwprintw(mWin, point.y(), point.x(), "%*.*s", (int)mColWidth, (int)mColWidth, content.c_str());
     wattroff(mWin, A_STANDOUT);
 }
-inline bool ContentDrawer::isSelected(const Coordinates& coord) {
+bool ContentDrawer::isSelected(const Coordinates& coord) {
     return mPos.x() == coord.x() && mPos.y() == coord.y();
 }
 Coordinates ContentDrawer::getRealPoint(const Coordinates& coord) {

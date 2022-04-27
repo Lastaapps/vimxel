@@ -24,7 +24,7 @@ void Table::updateCell(const Coordinates& coord, const Cell& cell) {
 		mMap.erase(coord);
 	else
 		// insert/update
-		mMap.insert_or_assign(coord, unique_ptr<const Cell>(&cell));
+		mMap.insert_or_assign(coord, unique_ptr<const Cell>(cell.clone()));
 
 	updateContracts(coord);
 }

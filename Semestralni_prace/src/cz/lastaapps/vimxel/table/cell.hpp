@@ -9,6 +9,7 @@ class Cell {
    public:
 	virtual ~Cell() {}
 	virtual const string& getContent() const = 0;
+	virtual Cell* clone() const = 0;
 };
 
 class TextCell : public Cell {
@@ -18,6 +19,7 @@ class TextCell : public Cell {
 	TextCell(string);
     ~TextCell() = default;
 	const string& getContent() const override;
+	virtual Cell* clone() const override;
 };
 
 class EmptyCell : public Cell {
@@ -26,6 +28,7 @@ class EmptyCell : public Cell {
    public:
     ~EmptyCell() = default;
 	const string& getContent() const override;
+	virtual Cell* clone() const override;
 };
 
 }  // namespace cz::lastaapps::vimexel::table

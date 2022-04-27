@@ -5,9 +5,11 @@
 #include <memory>
 
 #include "../table/coordinate.hpp"
+#include "../table/cellContract.hpp"
 #include "colDrawer.hpp"
 #include "posDrawer.hpp"
 #include "rowDrawer.hpp"
+#include "contentDrawer.hpp"
 using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
@@ -19,10 +21,12 @@ class Display final {
 	PosDrawer* posDrawer = nullptr;
 	RowDrawer* rowDrawer = nullptr;
 	ColDrawer* colDrawer = nullptr;
+	ContentDrawer* contentDrawer = nullptr;
 	table::Coordinates mPos, mViewPort;
+	shared_ptr<CellContract> mContract;
 
    public:
-	Display();
+	Display(shared_ptr<CellContract> contract);
 	~Display();
 	void draw();
 	void setPosition(const table::Coordinates& corrd);

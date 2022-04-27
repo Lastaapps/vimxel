@@ -3,9 +3,7 @@ CXX	=	g++
 
 # C++ compiler options
 DEBUG	= true
-ifeq ($(DEBUG),true)
-	CXXFLAGSDEBUG	=
-else
+ifeq ($(DEBUG), true)
 	CXXFLAGSDEBUG	= -g3 -fsanitize=address
 endif
 CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra -O3 $(CXXFLAGSDEBUG)
@@ -13,7 +11,10 @@ CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra -O3 $(CXXFLAGSDEBUG)
 # External libraries used
 LIBS	=	-lncurses
 # Linker options
-LFLAGS =
+ifeq ($(DEBUG), true)
+	LFLAGSDEBUG	= -fsanitize=address
+endif
+LFLAGS = $(LFLAGSDEBUG)
 # My username, used as output filename
 USERNAME =	lastope2
 

@@ -8,19 +8,8 @@ using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
 
-Display::Display() {
-	initscr();
-	//  Ctr+C gets ignored
-	// raw();
-	//  Ctr+C works as normal
-	cbreak();
-	// pressed characters wouldn't be printed
-	noecho();
-	// arrows, F keys and others enabled
-	keypad(stdscr, TRUE);
-	// hide cursor
-	curs_set(false);
-
+Display::Display(shared_ptr<CellContract> contract)
+	: mContract(contract) {
 	// initial refresh
 	refresh();
 	updateDisplayConfig();
@@ -28,13 +17,13 @@ Display::Display() {
 
 Display::~Display() {
 	delWindows();
-	endwin();
 }
 
 void Display::delWindows() {
 	delete posDrawer;
 	delete rowDrawer;
 	delete colDrawer;
+	delete contentDrawer;
 	delwin(colNamesWin);
 	delwin(rowNamesWin);
 	delwin(vimWin);
@@ -65,14 +54,14 @@ void Display::updateDisplayConfig() {
 	posDrawer = new PosDrawer(posWin, mPos, mViewPort);
 	rowDrawer = new RowDrawer(rowNamesWin, mPos, mViewPort);
 	colDrawer = new ColDrawer(colNamesWin, cellWidth, mPos, mViewPort);
+	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mContract);
 }
 void Display::draw() {
-	const table::Coordinates scrSize = getTerminalSize();
-
 	drawSeparatingLines();
 	posDrawer->draw();
 	rowDrawer->draw();
 	colDrawer->draw();
+	contentDrawer->draw();
 
 	while (true) {
 		int ch = getch();
@@ -105,11 +94,6 @@ void Display::draw() {
 			break;
 		}
 	}
-
-	delwin(colNamesWin);
-	delwin(rowNamesWin);
-	delwin(vimWin);
-	delwin(contentWin);
 }
 void Display::setPosition(const table::Coordinates& coord) {
 	mPos = coord;
@@ -166,5 +150,6 @@ void Display::refreshWindows() {
 	posDrawer->selectPos(mPos, mViewPort);
 	rowDrawer->selectPos(mPos, mViewPort);
 	colDrawer->selectPos(mPos, mViewPort);
+	contentDrawer->selectPos(mPos, mViewPort);
 }
 }  // namespace cz::lastaapps::vimxel::display

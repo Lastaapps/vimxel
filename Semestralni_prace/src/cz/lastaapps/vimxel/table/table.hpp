@@ -16,6 +16,7 @@ class Table final {
 	vector<shared_ptr<CellContract>> mContracts;
 
    public:
+	Table() = default;
 	Table(const Table& other) = delete;
 	Table(const Table&& other) = delete;
 	Table& operator=(const Table& other) = delete;

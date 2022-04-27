@@ -13,7 +13,7 @@ namespace cz::lastaapps::vimxel::display {
 class ContentDrawer final : public Drawer {
 	const size_t mColWidth, mRowHeight;
 	const shared_ptr<CellContract> mCntr;
-	Coordinates cellCount = getCellsCount();
+	const Coordinates cellCount = getCellsCount();
 
 	public:
 	ContentDrawer(WINDOW * w, const size_t colW, const size_t rowH, shared_ptr<CellContract> cnt);
@@ -23,12 +23,15 @@ class ContentDrawer final : public Drawer {
 	    table::Coordinates pos, table::Coordinates viewPort,
 		shared_ptr<CellContract> cnt);
 	~ContentDrawer();
+	void selectPos(
+	    const table::Coordinates& pos,
+	    const table::Coordinates& viewPort) override;
 	void draw() override;
 
 	private:
 	void init();
-	inline Coordinates getCellsCount() const;
-	inline void renderItem(const Coordinates &coord);
+	Coordinates getCellsCount() const;
+	void renderItem(const Coordinates &coord);
 	inline bool isSelected(const Coordinates &coord);
 	Coordinates getRealPoint(const Coordinates& coord);
 };
