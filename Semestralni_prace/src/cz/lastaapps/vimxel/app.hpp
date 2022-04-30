@@ -20,9 +20,6 @@ class App final {
     void setupDisplay();
 
     // Storage engine
-    // NCurses Init
-    // Table
-    // Display
     // Vim
 };
 

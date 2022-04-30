@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "../../../../../src/cz/lastaapps/vimxel/table/coordinate.hpp"
-#include "../testUtils.cpp"
+#include "../testUtils.hpp"
 using namespace std;
 using namespace cz::lastaapps::vimxel;
 
