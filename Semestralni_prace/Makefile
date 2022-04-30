@@ -57,7 +57,7 @@ compile:	$(USERNAME)
 
 # Runs compiled binary
 run:
-	@./$(USERNAME)
+	@./$(USERNAME) $()
 
 # Tests
 compile_test:	$(TEST_FILE)
@@ -120,4 +120,5 @@ clean:
 	rm -f $(TEST_OBJECTS) $(TEST_DEPENDS) $(TEST_FILE)
 	rm -f core
 	rm -fr doc
+	rm -f "logs.txt"
 

@@ -1,26 +1,50 @@
 #include "app.hpp"
+#include "log.hpp"
 #include "table/cell.hpp"
+#include "storage/storage.hpp"
 
 namespace cz::lastaapps::vimxel {
 int App::run(vector<string> args) {
-    initNCurses();
+	printArgs(args);
+	initNCurses();
     try {
-		shared_ptr<table::Table> table = loadTable();
+		shared_ptr<table::Table> table = loadTable(args);
 		display::Display display(table->createCellContract());
         display.draw();
-	} catch(...) {
+	} catch (const std::exception& ex) {
 		destroyNCurses();
+		cerr << ex.what() << endl;
+		return 1;
+	} catch (const std::string& ex) {
+		destroyNCurses();
+		cerr << ex << endl;
+		return 1;
+	} catch (...) {
+		destroyNCurses();
+		cerr << "Unknown exception" << endl;
 		return 1;
 	}
-    destroyNCurses();
+	destroyNCurses();
 	return 0;
 }
 
-shared_ptr<table::Table> App::loadTable() {
+void App::printArgs(const vector<string> &args) {
+	mlog << "App args: ";
+	bool isFirst = true;
+	for (const auto& arg : args) {
+		if (isFirst)
+			isFirst = false;
+		else
+			mlog << ", ";
+		mlog << arg;
+	}
+	mlog << endl;
+}
+
+shared_ptr<table::Table> App::loadTable(const vector<string> &args) {
     auto table = shared_ptr<table::Table>(new table::Table);
-	for (int i = 0; i < 42; i++)
-		for (int j = 0; j < 69; j++)
-			table->updateCell(Coordinates(i, j), TextCell(to_string(i + 1) + ", " + to_string(j + 1)));
+	if (args.size() >= 2)
+		storage::Storage::loadData(args.at(1), table);
 	return table;
 }
 

@@ -1,6 +1,7 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 #include <string>
+#include <iostream>
 
 using namespace std;
 namespace cz::lastaapps::vimxel::table {
@@ -42,6 +43,8 @@ class Coordinates final {
 	static string toString(size_t pos);
 	static size_t pow(size_t a, size_t x);
 };
+
+ostream& operator<<(ostream& out, const Coordinates& c);
 
 }  // namespace cz::lastaapps::vimxel::table
 #endif

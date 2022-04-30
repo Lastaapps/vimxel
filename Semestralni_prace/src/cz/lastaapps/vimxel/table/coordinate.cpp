@@ -104,4 +104,9 @@ size_t Coordinates::pow(size_t a, size_t x) {
 	return toReturn;
 }
 
+ostream& operator<<(ostream& out, const Coordinates& c) {
+	out << '[' << c.x() << ',' << c.y() << ']';
+	return out;
+}
+
 }  // namespace cz::lastaapps::vimxel::table

@@ -1,8 +1,10 @@
 #include "storage.hpp"
 
+#include <filesystem>
 #include <ios>
 #include <sstream>
 
+#include "../log.hpp"
 #include "../table/cell.hpp"
 #include "../table/coordinate.hpp"
 #include "../table/table.hpp"
@@ -11,25 +13,44 @@ namespace cz::lastaapps::vimxel::storage {
 
 void Storage::saveData(shared_ptr<table::Table> table, const string& path) {
 	auto size = table->tableSize();
-	fstream file;
-	openFile(path, file);
+	ofstream file;
+	openFileForWrite(path, file);
 	for (size_t x = 0; x < size.x(); x++) {
 		bool isFirst = true;
 		for (size_t y = 0; y < size.y(); y++) {
 			if (isFirst)
 				isFirst = false;
 			else
-				file << ';';
+				file << DELIMITER;
 			const table::Cell& cell = table->getCell(table::Coordinates(x, y));
 			file << escapeText(cell.getContent());
 		}
-		file << '\n';
+		file << LINE_DELIMITER;
 	}
+	// drop latests \n
+	file.close();
+	auto filePath = filesystem::path(path);
+	size_t fileSize = file_size(filePath);
+	if (fileSize != 0)
+		resize_file(filePath, fileSize - 1);
 }
 
 void Storage::exportData(shared_ptr<table::Table> table, const string& path) {
 	// TODO update after expression evaulation is done
 	saveData(table, path);
+}
+
+void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
+	ifstream file;
+	openFileForRead(path, file);
+	for (size_t y = 0; file; y++) {
+		for (size_t x = 0; file; x++) {
+			bool lineEnd;
+			string cellContent = move(importText(file, lineEnd));
+			table->updateCell(table::Coordinates(x, y), table::TextCell(cellContent));
+			if (lineEnd) break;
+		}
+	}
 }
 
 string Storage::escapeText(const string& str) {
@@ -52,10 +73,11 @@ string Storage::escapeText(const string& str) {
 }
 
 string Storage::importText(const string& str) {
+	bool tmp;
 	auto stream = istringstream(str);
-	return importText(stream);
+	return importText(stream, tmp);
 }
-string Storage::importText(istream& stream) {
+string Storage::importText(istream& stream, bool& lineEnd) {
 	stringstream out;
 	char c;
 	stream >> noskipws;
@@ -65,18 +87,23 @@ string Storage::importText(istream& stream) {
 	if (!isEncapsulated) {
 		stream.unget();
 		while (stream >> c) {
-			if (c == DELIMITER || c == LINE_DELIMITER)
+			if (c == DELIMITER || c == LINE_DELIMITER) {
+				lineEnd = c == LINE_DELIMITER;
 				break;
-			else
+			} else {
 				out << c;
+			}
 		}
 	} else {
 		bool inEscape = false;
 		while (stream >> c) {
 			if (c == DELIMITER || c == LINE_DELIMITER) {
-				if (!inEscape)
+				if (!inEscape) {
 					out << c;
-				else break;
+				} else {
+					lineEnd = c == LINE_DELIMITER;
+					break;
+				}
 			} else if (c == ENCAPSULATOR) {
 				if (inEscape)
 					out << c;
@@ -84,15 +111,20 @@ string Storage::importText(istream& stream) {
 			} else {
 				if (!inEscape)
 					out << c;
-				else throw SingleEncapsulator();
+				else
+					throw SingleEncapsulator();
 			}
 		}
 		if (stream.eof() && !inEscape) throw InvalidEncapsulation();
 	}
+	if (stream.eof()) lineEnd = true;
 	return out.str();
 }
 
-void Storage::openFile(const string& str, fstream& stream) {
-	stream = fstream(str, ios::in | ios::out | ios::trunc);
+void Storage::openFileForWrite(const string& str, ofstream& stream) {
+	stream = ofstream(str, ios::out | ios::trunc);
+}
+void Storage::openFileForRead(const string& str, ifstream& stream) {
+	stream = ifstream(str, ios::in);
 }
 }  // namespace cz::lastaapps::vimxel::storage

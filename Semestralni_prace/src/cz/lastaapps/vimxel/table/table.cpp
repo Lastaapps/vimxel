@@ -1,5 +1,6 @@
 #include "table.hpp"
 #include "cell.hpp"
+#include "../log.hpp"
 
 #include <iostream>
 #include <map>
@@ -58,7 +59,7 @@ void Table::updateContracts(const Coordinates& coord) {
 Coordinates Table::tableSize() const {
 	Coordinates biggest;
 	for (const auto & [key, value] : mMap)
-		if (key.x() >= biggest.x() && key.y() > biggest.y())
+		if (key.x() >= biggest.x() && key.y() >= biggest.y())
 			biggest = key;
 	return biggest;
 }

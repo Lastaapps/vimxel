@@ -16,16 +16,17 @@ class Storage final {
    public:
 	static void saveData(shared_ptr<table::Table> table, const string & path);
     static void exportData(shared_ptr<table::Table> table, const string & path);
-    static shared_ptr<shared_ptr<table::Table>> loadData(const string & path);
+    static void loadData(const string & path, shared_ptr<table::Table>& table);
 
    private:
 	static constexpr char DELIMITER = ';';
 	static constexpr char LINE_DELIMITER = '\n';
 	static constexpr char ENCAPSULATOR = '"';
-	static void openFile(const string & str, fstream & stream);
+	static void openFileForWrite(const string & str, ofstream & stream);
+	static void openFileForRead(const string & str, ifstream & stream);
     static string escapeText(const string & str);
-    static string importText(istream & stream);
 	static string importText(const string& str);
+    static string importText(istream & stream, bool & lineEnd);
 
 	friend class StorageTester;
     };
