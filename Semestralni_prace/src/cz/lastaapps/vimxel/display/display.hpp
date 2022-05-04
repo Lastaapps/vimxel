@@ -6,6 +6,7 @@
 
 #include "../table/coordinate.hpp"
 #include "../table/cellContract.hpp"
+#include "state.hpp"
 #include "colDrawer.hpp"
 #include "posDrawer.hpp"
 #include "rowDrawer.hpp"
@@ -22,19 +23,25 @@ class Display final {
 	RowDrawer* rowDrawer = nullptr;
 	ColDrawer* colDrawer = nullptr;
 	ContentDrawer* contentDrawer = nullptr;
+
 	table::Coordinates mPos, mViewPort;
-	shared_ptr<CellContract> mContract;
+	shared_ptr<State> mState;
+	shared_ptr<StateCallback> mStateCallback;
+	shared_ptr<CellContract> mCellContract;
+
+	struct DisplayStateCallback final : StateCallback {
+		Display * mParent;
+		DisplayStateCallback(Display * parent) : mParent(parent) {}
+		void onUpdatePos(const table::Coordinates& pos) override;
+		void onUpdateViewPort(const table::Coordinates& coord) override;
+	};
 
    public:
-	Display(shared_ptr<CellContract> contract);
+	Display(
+	    shared_ptr<State> stateCallback,
+	    shared_ptr<CellContract> contract);
 	~Display();
 	void draw();
-	void setPosition(const table::Coordinates& corrd);
-	void moveX(bool down);
-	void moveY(bool right);
-	void setViewPort(const table::Coordinates& corrd);
-	void moveViewX(bool down);
-	void moveViewY(bool right);
 
    private:
 	static constexpr size_t cellWidth = 8;

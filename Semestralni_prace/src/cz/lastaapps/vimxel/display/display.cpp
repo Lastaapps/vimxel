@@ -8,8 +8,10 @@ using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
 
-Display::Display(shared_ptr<CellContract> contract)
-	: mContract(contract) {
+Display::Display( shared_ptr<State> state, shared_ptr<CellContract> contract)
+: mState(state), mCellContract(contract) {
+	mStateCallback = shared_ptr<StateCallback>(new DisplayStateCallback(this));
+	mState -> registerCallback(mStateCallback);
 	// initial refresh
 	refresh();
 	updateDisplayConfig();
@@ -17,6 +19,16 @@ Display::Display(shared_ptr<CellContract> contract)
 
 Display::~Display() {
 	delWindows();
+}
+
+void Display::DisplayStateCallback::onUpdatePos(const table::Coordinates& coord) {
+	mParent->mPos = coord;
+	mParent->updateViewPort();
+	mParent->refreshWindows();
+}
+void Display::DisplayStateCallback::onUpdateViewPort(const table::Coordinates& coord) {
+	mParent->mViewPort = coord;
+	mParent->refreshWindows();
 }
 
 void Display::delWindows() {
@@ -54,7 +66,7 @@ void Display::updateDisplayConfig() {
 	posDrawer = new PosDrawer(posWin, mPos, mViewPort);
 	rowDrawer = new RowDrawer(rowNamesWin, mPos, mViewPort);
 	colDrawer = new ColDrawer(colNamesWin, cellWidth, mPos, mViewPort);
-	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mContract);
+	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mCellContract);
 }
 void Display::draw() {
 	drawSeparatingLines();
@@ -63,7 +75,7 @@ void Display::draw() {
 	colDrawer->draw();
 	contentDrawer->draw();
 
-	while (true) {
+	/*while (true) {
 		int ch = getch();
 		if (ch == ERR) break;
 		if (ch == 'q') break;
@@ -93,22 +105,13 @@ void Display::draw() {
 			moveViewX(true);
 			break;
 		}
-	}
-}
-void Display::setPosition(const table::Coordinates& coord) {
-	mPos = coord;
-	updateViewPort();
-	refreshWindows();
-}
-void Display::moveX(bool down) {
-	setPosition(down ? mPos.incX() : mPos.decX());
-}
-void Display::moveY(bool right) {
-	setPosition(right ? mPos.incY() : mPos.decY());
+	}*/
 }
 void Display::updateViewPort() {
 	const table::Coordinates scrSize = getTerminalSize();
+	const table::Coordinates original = mViewPort;
 	const size_t horItems = (scrSize.x() - 1 - rowNamesWidth) / cellWidth - 1;
+
 	if (mPos.x() < mViewPort.x()) {
 		mViewPort = mViewPort.withX(mPos.x());
 	} else if (mPos.x() > mViewPort.x() + horItems) {
@@ -120,16 +123,9 @@ void Display::updateViewPort() {
 	} else if (mPos.y() > mViewPort.y() + vertItems) {
 		mViewPort = mViewPort.withY(mPos.y() - vertItems);
 	}
-}
-void Display::setViewPort(const table::Coordinates& coord) {
-	mViewPort = coord;
-	refreshWindows();
-}
-void Display::moveViewX(bool down) {
-	setViewPort(down ? mViewPort.incX() : mViewPort.decX());
-}
-void Display::moveViewY(bool right) {
-	setViewPort(right ? mViewPort.incY() : mViewPort.decY());
+
+	if (mViewPort != original)
+		mState -> setViewPort(mViewPort);
 }
 
 table::Coordinates Display::getTerminalSize() {

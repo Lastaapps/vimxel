@@ -1,6 +1,8 @@
 #include "app.hpp"
 #include "log.hpp"
 #include "table/cell.hpp"
+#include "display/state.hpp"
+#include "display/display.hpp"
 #include "storage/storage.hpp"
 
 namespace cz::lastaapps::vimxel {
@@ -9,8 +11,11 @@ int App::run(vector<string> args) {
 	initNCurses();
     try {
 		shared_ptr<table::Table> table = loadTable(args);
-		display::Display display(table->createCellContract());
+		shared_ptr<display::State> dState = make_shared<display::State>();
+
+		display::Display display(dState, table->createCellContract());
         display.draw();
+
 	} catch (const std::exception& ex) {
 		destroyNCurses();
 		cerr << ex.what() << endl;
