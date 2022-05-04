@@ -6,31 +6,37 @@
 #include <string>
 #include <list>
 
+#include "normalParser.hpp"
+#include "insertParser.hpp"
+#include "commandParser.hpp"
 #include "vimContract.hpp"
 #include "parserResult.hpp"
+#include "vimState.hpp"
 #include "../display/state.hpp"
 #include "../table/table.hpp"
 
 using namespace std;
 namespace cz::lastaapps::vimxel::vim {
-class Parser final {
-	shared_ptr<display::State> mDisplayState;
+class VimParser final {
+	VimState mState;
+	Mode mMode = Mode::NORMAL;
+
 	shared_ptr<display::StateCallback> mDisplayStateCallback;
-	shared_ptr<table::Table> mTable;
 	list<shared_ptr<VimContract>> mContracts;
 
-	const vector<string> mArgs;
-	table::Coordinates mPos;
+	NormalParser normalParser = NormalParser(&mState);
+	InsertParser insertParser = InsertParser(&mState);
+	CommandParser commandParser = CommandParser(&mState);
 
 	struct VimStateCallback final : public display::StateCallback {
-		Parser* mParent;
-		VimStateCallback(Parser* parent) : mParent(parent){};
+		VimParser* mParent;
+		VimStateCallback(VimParser* parent) : mParent(parent){};
 		void onUpdatePos(const table::Coordinates& pos) override;
-		void onUpdateViewPort(const table::Coordinates&) override {}
+		void onUpdateViewPort(const table::Coordinates& viewPort) override;
 	};
 
    public:
-	Parser(
+	VimParser(
 	    shared_ptr<display::State> state,
 	    shared_ptr<table::Table> table,
 	    const vector<string> args);
@@ -39,8 +45,11 @@ class Parser final {
 	shared_ptr<VimContract> createContract();
 
    private:
+	AbsParser& getParser();
 	void setPos(const table::Coordinates& coord);
+	void setViewPort(const table::Coordinates& coord);
 	void notifyContracts(const VimInfo& info);
+	void updateInfo();
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

@@ -19,9 +19,11 @@ void VimDrawer::draw() {
 	mvwprintw(mWin, 0, 0, "%*s", (int)mWinSize.x(), "");
 	if (!mInfo.text.empty()) {
 		mvwprintw(mWin, 0, 0, "%.*s", (int)mWinSize.x(), mInfo.text.c_str());
-		wattron(mWin, A_STANDOUT);
-		mvwaddch(mWin, 0, (int)(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
-		wattroff(mWin, A_STANDOUT);
+		if (mInfo.cursorPos != (size_t)-1) {
+			wattron(mWin, A_STANDOUT);
+			mvwaddch(mWin, 0, (int)(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
+			wattroff(mWin, A_STANDOUT);
+		}
 	}
 	const string mode = to_string(mInfo.mode);
 	if (!mode.empty()) {

@@ -18,7 +18,8 @@ struct VimInfo final {
 
 class VimContract final {
     using Callback = function<void(const VimInfo&)>;
-    bool hasCallback = false;
+    bool mHasCallback = false;
+    VimInfo mLatest;
     Callback mCallback;
     public:
     void onDataChanged(const VimInfo& info);

@@ -4,7 +4,7 @@
 #include "display/state.hpp"
 #include "display/display.hpp"
 #include "storage/storage.hpp"
-#include "vim/parser.hpp"
+#include "vim/vimParser.hpp"
 
 namespace cz::lastaapps::vimxel {
 int App::run(vector<string> args) {
@@ -18,7 +18,7 @@ int App::run(vector<string> args) {
 		shared_ptr<display::State> dState = make_shared<display::State>();
 
 		log("Staring parser");
-		vim::Parser vim(dState, table, args);
+		vim::VimParser vim(dState, table, args);
 		shared_ptr<vim::VimContract> vimContract = vim.createContract();
 
 		log("Setting up display");

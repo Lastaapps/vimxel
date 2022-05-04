@@ -8,14 +8,16 @@ VimInfo::VimInfo(size_t cP, const string & s, Mode m)
 : cursorPos(cP), text(s), mode(m) {}
 
 void VimContract::onDataChanged(const VimInfo& info) {
-    if (hasCallback)
+    if (mHasCallback)
 		mCallback(info);
+	mLatest = info;
 }
 void VimContract::registerCallback(Callback c) {
-    hasCallback = true;
+    mHasCallback = true;
     mCallback = c;
+    c(mLatest);
 }
 void VimContract::unregisterCallback() {
-    hasCallback = false;
+    mHasCallback = false;
 }
 }  // namespace cz::lastaapps::vimxel::vim

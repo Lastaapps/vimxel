@@ -1,5 +1,40 @@
 # VimXel
 
+## Shrnutí
+### Vykreslování
+- nadřída drawer poskytující společné rozhraní pro vyhreslování jednotlivých částí UI
+
+### Vim ovládání
+- různé dekodéry vtupu z klávesnice podle druhu vstupu
+
+### Buňky
+- různé druhy buňek - prázdný, textová a s výrazem
+
+### Výrazy
+Výraz bude převeden na binární strom, který bude postupně vyhodnocován.
+Každý node stromu může být
+- binární operátor
+    - +, -, *, /
+    - concat
+- unární operátor
+    - +, -
+    - sin, cos
+- agregační fce
+    - avg, sum
+- literály
+    - jednobuňkový
+        - odkaz na buňku
+        - číslo (int, double)
+        - text
+    - vícebuňkové
+        - oblast
+
+### A další drobnosti
+- různé druhy chyb
+
+
+
+
 ## Návrh polymorfismu
 
 Polymorfismus (dále jen pl) plánuji použít na mnoha místech, například pro
@@ -20,3 +55,5 @@ bude nutno rozliš mezi jejich typy - zda jsou kompatibilní s operací,
 sin("Ahoj") je co? Výsledkem všech operací bude buďto chyba propagovaná přes
 throw, nebo vypočítaná hodnota, na které bude muset být přetěžovaná metoda
 toString() pro vytvoření textu do tabulky a na uložení.
+
+Dále Vim má mnoho módů, každý z nich má vlastní parser a vlastní chování, rozhrají ovšem shodné
