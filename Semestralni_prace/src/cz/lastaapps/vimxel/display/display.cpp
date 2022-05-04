@@ -49,7 +49,6 @@ void Display::delWindows() {
 void Display::updateDisplayConfig() {
 	const table::Coordinates scrSize = getTerminalSize();
 
-	delWindows();
 	colNamesWin = newwin(
 	    colNamesHeight,
 	    scrSize.x() - rowNamesWidth - 1,
@@ -72,6 +71,10 @@ void Display::updateDisplayConfig() {
 	colDrawer = new ColDrawer(colNamesWin, cellWidth, mPos, mViewPort);
 	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mCellContract);
 	vimDrawer = new VimDrawer(vimWin, mVimContract);
+}
+void Display::recreate() {
+	delWindows();
+	updateDisplayConfig();
 }
 void Display::draw() {
 	drawSeparatingLines();

@@ -46,6 +46,7 @@ shared_ptr<CellContract> Table::createCellContract() {
 	return ptr;
 }
 void Table::updateContracts(const Coordinates& coord) {
+	mlog << "Updating data at " << coord << endl;
 	for (size_t i = 0; i < mContracts.size(); i++) {
 		auto ptr = mContracts[i];
 		if (ptr.use_count() <= 1) {

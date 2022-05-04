@@ -7,12 +7,14 @@ using namespace std;
 namespace cz::lastaapps::vimxel::vim {
 class CommandParser final : public AbsParser {
     private:
-    string mHistory;
+    string mCommand = "";
     VimState* mState;
     public:
     CommandParser(VimState* state);
     ParserResult handleKey(Mode & outMode) override;
     pair<string, size_t> getTextAndPosition() override;
+    private:
+    ParserResult handleCommand();
 };
 }
 

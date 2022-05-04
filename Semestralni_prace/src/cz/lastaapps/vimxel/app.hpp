@@ -12,6 +12,7 @@ using namespace std;
 namespace cz::lastaapps::vimxel {
 
 class App final {
+	  table::Coordinates mWindowSize;
    public:
 	int run(vector<string> args);
 
@@ -21,6 +22,7 @@ class App final {
 	void initNCurses();
 	void destroyNCurses();
 	void setupDisplay();
+	bool checkWindowSize();
 
 	// Storage engine
 	// Vim

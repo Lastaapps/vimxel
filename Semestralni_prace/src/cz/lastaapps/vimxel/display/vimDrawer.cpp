@@ -21,7 +21,10 @@ void VimDrawer::draw() {
 		mvwprintw(mWin, 0, 0, "%.*s", (int)mWinSize.x(), mInfo.text.c_str());
 		if (mInfo.cursorPos != (size_t)-1) {
 			wattron(mWin, A_STANDOUT);
-			mvwaddch(mWin, 0, (int)(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
+			if (mInfo.cursorPos < mInfo.text.length())
+				mvwaddch(mWin, 0, (int)(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
+			else
+				mvwaddch(mWin, 0, (int)(mInfo.cursorPos), ' ');
 			wattroff(mWin, A_STANDOUT);
 		}
 	}

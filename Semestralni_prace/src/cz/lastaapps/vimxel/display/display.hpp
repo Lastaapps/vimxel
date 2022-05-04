@@ -46,7 +46,11 @@ class Display final {
 	    shared_ptr<State> stateCallback,
 	    shared_ptr<CellContract> cellContract,
 		shared_ptr<vim::VimContract> vimContract);
+	Display(const Display& other) = delete;
+	Display(Display&& other) = delete;
+	Display& operator=(const Display& other) = delete;
 	~Display();
+	void recreate();
 	void draw();
 
    private:

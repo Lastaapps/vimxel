@@ -50,6 +50,7 @@ class VimParser final {
 	void setViewPort(const table::Coordinates& coord);
 	void notifyContracts(const VimInfo& info);
 	void updateInfo();
+	void unknowsInfo();
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

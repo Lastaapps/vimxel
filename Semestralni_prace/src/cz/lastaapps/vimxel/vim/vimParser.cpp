@@ -15,7 +15,6 @@ VimParser::VimParser(
     shared_ptr<table::Table> table,
     const vector<string> args)
     : mState(VimState(state, table, args)) {
-
 	mDisplayStateCallback = shared_ptr<display::StateCallback>(new VimStateCallback(this));
 	mState.mDisplayState->registerCallback(mDisplayStateCallback);
 
@@ -23,7 +22,11 @@ VimParser::VimParser(
 }
 
 ParserResult VimParser::handleKeyBoard() {
-	return getParser().handleKey(mMode);
+	ParserResult res = getParser().handleKey(mMode);
+	if (res == ParserResult::UNKNOWN)
+		unknowsInfo();
+	else updateInfo();
+	return res;
 }
 
 shared_ptr<VimContract> VimParser::createContract() {
@@ -34,7 +37,7 @@ shared_ptr<VimContract> VimParser::createContract() {
 }
 void VimParser::notifyContracts(const VimInfo& info) {
 	for (auto itr = mContracts.begin(); itr != mContracts.end(); itr++) {
-		if (itr -> use_count() == 1)
+		if (itr->use_count() == 1)
 			itr = mContracts.erase(itr);
 		else
 			(*itr)->onDataChanged(info);
@@ -59,6 +62,11 @@ void VimParser::updateInfo() {
 	VimInfo info(textInfo.second, textInfo.first, mMode);
 	notifyContracts(info);
 }
+void VimParser::unknowsInfo() {
+	VimInfo info(-1, "Unknow command or key sequence", mMode);
+	notifyContracts(info);
+}
+
 void VimParser::setPos(const table::Coordinates& coord) {
 	mState.mPos = coord;
 	updateInfo();

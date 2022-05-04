@@ -23,8 +23,12 @@ int App::run(vector<string> args) {
 
 		log("Setting up display");
 		display::Display display(dState, cellContract, vimContract);
-        display.draw();
+
 		while(true) {
+			if (checkWindowSize()) {
+				display.recreate();
+				display.draw();
+			}
 			using Res = vim::ParserResult;
 			Res res = vim.handleKeyBoard();
 			if (res == Res::QUIT) break;
@@ -87,6 +91,17 @@ void App::destroyNCurses() {
 	clear();
 	refresh();
 	endwin();
+}
+
+bool App::checkWindowSize() {
+	size_t y, x;
+	getmaxyx(stdscr, y, x);
+	if (mWindowSize.x() != x || mWindowSize.y() != y) {
+		mWindowSize = Coordinates(x, y);
+		mlog << "New screen size: " << mWindowSize << endl;
+		return true;
+	}
+	return false;
 }
 
 }  // namespace cz::lastaapps::vimxel
