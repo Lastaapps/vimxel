@@ -10,11 +10,12 @@ namespace cz::lastaapps::vimxel::display {
 
 Display::Display( shared_ptr<State> state, shared_ptr<CellContract> contract)
 : mState(state), mCellContract(contract) {
-	mStateCallback = shared_ptr<StateCallback>(new DisplayStateCallback(this));
-	mState -> registerCallback(mStateCallback);
 	// initial refresh
 	refresh();
 	updateDisplayConfig();
+
+	mStateCallback = shared_ptr<StateCallback>(new DisplayStateCallback(this));
+	mState -> registerCallback(mStateCallback);
 }
 
 Display::~Display() {
@@ -74,38 +75,6 @@ void Display::draw() {
 	rowDrawer->draw();
 	colDrawer->draw();
 	contentDrawer->draw();
-
-	/*while (true) {
-		int ch = getch();
-		if (ch == ERR) break;
-		if (ch == 'q') break;
-		switch (ch) {
-		case 'k':
-			moveY(false);
-			break;
-		case 'j':
-			moveY(true);
-			break;
-		case 'h':
-			moveX(false);
-			break;
-		case 'l':
-			moveX(true);
-			break;
-		case KEY_UP:
-			moveViewY(false);
-			break;
-		case KEY_DOWN:
-			moveViewY(true);
-			break;
-		case KEY_LEFT:
-			moveViewX(false);
-			break;
-		case KEY_RIGHT:
-			moveViewX(true);
-			break;
-		}
-	}*/
 }
 void Display::updateViewPort() {
 	const table::Coordinates scrSize = getTerminalSize();

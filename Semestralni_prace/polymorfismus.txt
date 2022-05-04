@@ -20,8 +20,3 @@ bude nutno rozliš mezi jejich typy - zda jsou kompatibilní s operací,
 sin("Ahoj") je co? Výsledkem všech operací bude buďto chyba propagovaná přes
 throw, nebo vypočítaná hodnota, na které bude muset být přetěžovaná metoda
 toString() pro vytvoření textu do tabulky a na uložení.
-
-Dále se budu v mnoha dalších místech snažit přiblížit "normálním" jazykům a
-dělat co nejvíce tříd jako rozhraní - implementace a to i v případech, kdy
-implementace bude jediná.
-

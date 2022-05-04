@@ -4,28 +4,42 @@
 #include "display/state.hpp"
 #include "display/display.hpp"
 #include "storage/storage.hpp"
+#include "vim/parser.hpp"
 
 namespace cz::lastaapps::vimxel {
 int App::run(vector<string> args) {
+	log("App started");
 	printArgs(args);
 	initNCurses();
     try {
+		log("Loading data");
 		shared_ptr<table::Table> table = loadTable(args);
 		shared_ptr<display::State> dState = make_shared<display::State>();
 
+		log("Setting up display");
 		display::Display display(dState, table->createCellContract());
         display.draw();
 
+		log("Staring parser");
+		vim::Parser vim(dState, table, args);
+		while(true) {
+			using Res = vim::ParserResult;
+			Res res = vim.handleKeyBoard();
+			if (res == Res::QUIT) break;
+		}
 	} catch (const std::exception& ex) {
 		destroyNCurses();
+		log("Exception in app: "s + ex.what());
 		cerr << ex.what() << endl;
 		return 1;
 	} catch (const std::string& ex) {
 		destroyNCurses();
+		log("Exception in app: "s + ex);
 		cerr << ex << endl;
 		return 1;
 	} catch (...) {
 		destroyNCurses();
+		log("Exception in app");
 		cerr << "Unknown exception" << endl;
 		return 1;
 	}
@@ -68,6 +82,8 @@ void App::initNCurses() {
 }
 
 void App::destroyNCurses() {
+	clear();
+	refresh();
 	endwin();
 }
 
