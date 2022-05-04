@@ -13,8 +13,8 @@ void VimParser::VimStateCallback::onUpdateViewPort(const table::Coordinates& coo
 VimParser::VimParser(
     shared_ptr<display::State> state,
     shared_ptr<table::Table> table,
-    const vector<string> args)
-    : mState(VimState(state, table, args)) {
+    const string& filename)
+    : mState(VimState(state, table, filename)) {
 	mDisplayStateCallback = shared_ptr<display::StateCallback>(new VimStateCallback(this));
 	mState.mDisplayState->registerCallback(mDisplayStateCallback);
 
@@ -23,9 +23,19 @@ VimParser::VimParser(
 
 ParserResult VimParser::handleKeyBoard() {
 	ParserResult res = getParser().handleKey(mMode);
-	if (res == ParserResult::UNKNOWN)
+	switch (res) {
+	case ParserResult::UNKNOWN:
 		unknowsInfo();
-	else updateInfo();
+		break;
+	case ParserResult::ERROR:
+		errorInfo();
+		break;
+	case ParserResult::UPDATE:
+		updateInfo();
+		break;
+	default:
+		break;
+	}
 	return res;
 }
 
@@ -64,6 +74,10 @@ void VimParser::updateInfo() {
 }
 void VimParser::unknowsInfo() {
 	VimInfo info(-1, "Unknow command or key sequence", mMode);
+	notifyContracts(info);
+}
+void VimParser::errorInfo() {
+	VimInfo info(-1, mState.mErrorMsg, mMode);
 	notifyContracts(info);
 }
 

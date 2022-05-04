@@ -14,6 +14,7 @@ class Table final {
 	map<Coordinates, unique_ptr<const Cell>> mMap;
 	EmptyCell emptyCell;
 	vector<shared_ptr<CellContract>> mContracts;
+	bool mChanged = false;
 
    public:
 	Table() = default;
@@ -26,6 +27,9 @@ class Table final {
 	shared_ptr<CellContract> createCellContract();
 	Coordinates tableSize() const;
 	bool isEmpty() const;
+	void eraseAll();
+	bool changed() const;
+	void clearChanged();
 
    private:
 	void updateContracts(const Coordinates& coord);

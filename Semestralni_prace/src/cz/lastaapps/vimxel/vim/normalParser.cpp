@@ -15,43 +15,43 @@ ParserResult NormalParser::handleKey(Mode & outMode) {
 	switch (ch) {
 	case ':':
 		outMode = Mode::COMMAND;
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'i':
 	case 'a':
 	case KEY_F0 + 2:
 		outMode = Mode::INSERT;
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'k':
 		mState -> mDisplayState->moveY(false);
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'j':
 	case '\n':
 		mState -> mDisplayState->moveY(true);
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'h':
 	case KEY_STAB:
 	case KEY_BTAB:
 		mState -> mDisplayState->moveX(false);
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'l':
 	case '\t':
 		mState -> mDisplayState->moveX(true);
-		return Res::FINE;
+		return Res::UPDATE;
 	case KEY_UP:
 		mState -> mDisplayState->moveViewY(false);
-		return Res::FINE;
+		return Res::UPDATE;
 	case KEY_DOWN:
 		mState -> mDisplayState->moveViewY(true);
-		return Res::FINE;
+		return Res::UPDATE;
 	case KEY_LEFT:
 		mState -> mDisplayState->moveViewX(false);
-		return Res::FINE;
+		return Res::UPDATE;
 	case KEY_RIGHT:
 		mState -> mDisplayState->moveViewX(true);
-		return Res::FINE;
+		return Res::UPDATE;
 	case 'x': {
 		mState -> mTable -> updateCell(mState -> mPos, table::EmptyCell());
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	}
 	return Res::NOPE;

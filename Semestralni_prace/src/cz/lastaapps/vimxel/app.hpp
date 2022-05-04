@@ -17,7 +17,7 @@ class App final {
 	int run(vector<string> args);
 
    private:
-	shared_ptr<table::Table> loadTable(const vector<string> &args);
+	shared_ptr<table::Table> loadTable(const string &filename);
 	void printArgs(const vector<string> &args);
 	void initNCurses();
 	void destroyNCurses();

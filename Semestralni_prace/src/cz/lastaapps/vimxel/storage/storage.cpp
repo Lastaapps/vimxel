@@ -15,9 +15,9 @@ void Storage::saveData(shared_ptr<table::Table> table, const string& path) {
 	auto size = table->tableSize();
 	ofstream file;
 	openFileForWrite(path, file);
-	for (size_t x = 0; x < size.x(); x++) {
+	for (size_t y = 0; y < size.y(); y++) {
 		bool isFirst = true;
-		for (size_t y = 0; y < size.y(); y++) {
+		for (size_t x = 0; x < size.x(); x++) {
 			if (isFirst)
 				isFirst = false;
 			else
@@ -51,6 +51,7 @@ void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
 			if (lineEnd) break;
 		}
 	}
+	table -> clearChanged();
 }
 
 string Storage::escapeText(const string& str) {

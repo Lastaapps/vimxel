@@ -12,7 +12,7 @@ InsertParser::InsertParser(VimState* state)
 
 ParserResult InsertParser::handleKey(Mode& outMode) {
 	using Res = ParserResult;
-	if (checkLoad()) return Res::FINE;
+	if (checkLoad()) return Res::UPDATE;
 
 	int ch = getch();
 	if (ch == ERR) return Res::NOPE;
@@ -22,7 +22,7 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 		mText = "";
 		mCursor = (size_t)-1;
 		outMode = Mode::NORMAL;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_ENTER:
 	case '\n': {  // ENTER
@@ -30,7 +30,7 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 		mText = "";
 		mCursor = (size_t)-1;
 		outMode = Mode::NORMAL;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_BACKSPACE: {
 		if (!mText.empty()) {
@@ -40,29 +40,29 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 			} else
 				mText.erase(mText.begin());
 		}
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_LEFT:{
 		if (mCursor != 0) mCursor --;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_RIGHT:{
 		if (mCursor < mText.length()) mCursor ++;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_UP:{
 		mCursor = 0;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	case KEY_DOWN:{
 		mCursor = mText.length();
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	}
 	if (' ' <= ch && ch <= '~') {
 		mText.insert(mText.begin() + mCursor, ch);
 		mCursor++;
-		return Res::FINE;
+		return Res::UPDATE;
 	}
 	return Res::NOPE;
 }

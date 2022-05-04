@@ -1,6 +1,4 @@
 #include "table.hpp"
-#include "cell.hpp"
-#include "../log.hpp"
 
 #include <iostream>
 #include <map>
@@ -8,9 +6,10 @@
 #include <optional>
 #include <string>
 
+#include "../log.hpp"
+#include "cell.hpp"
 
 namespace cz::lastaapps::vimxel::table {
-
 
 // --- Table ------------------------------------------------------------------
 const Cell& Table::getCell(const Coordinates& coord) const {
@@ -28,6 +27,7 @@ void Table::updateCell(const Coordinates& coord, const Cell& cell) {
 		mMap.insert_or_assign(coord, unique_ptr<const Cell>(cell.clone()));
 
 	updateContracts(coord);
+	mChanged = true;
 }
 inline void Table::deleteCell(const Coordinates& coord) {
 	updateCell(coord, emptyCell);
@@ -35,9 +35,10 @@ inline void Table::deleteCell(const Coordinates& coord) {
 shared_ptr<CellContract> Table::createCellContract() {
 	class TableCellContract final : public CellContract {
 		const Table& mT;
-		public:
-		TableCellContract(const Table & t) : mT(t) {}
-		string getDataAt(const Coordinates & coord) const override {
+
+	   public:
+		TableCellContract(const Table& t) : mT(t) {}
+		string getDataAt(const Coordinates& coord) const override {
 			return mT.getCell(coord).getContent();
 		}
 	};
@@ -53,19 +54,30 @@ void Table::updateContracts(const Coordinates& coord) {
 			mContracts.erase(mContracts.begin() + i);
 			i--;
 		} else {
-			ptr -> dataUpdatedAt(coord);
+			ptr->dataUpdatedAt(coord);
 		}
 	}
 }
 Coordinates Table::tableSize() const {
-	Coordinates biggest;
-	for (const auto & [key, value] : mMap)
-		if (key.x() >= biggest.x() && key.y() >= biggest.y())
-			biggest = key;
-	return biggest;
+	size_t maxX = 0, maxY = 0;
+	for (const auto& [key, value] : mMap) {
+		if (key.x() > maxX) maxX = key.x();
+		if (key.y() > maxY) maxY = key.y();
+	}
+	return Coordinates(maxX + 1, maxY + 1);  // to convert coordinates to size
 }
 bool Table::isEmpty() const {
 	return mMap.empty();
+}
+void Table::eraseAll() {
+	mMap.erase(mMap.begin(), mMap.end());
+	mChanged = true;
+}
+bool Table::changed() const {
+	return mChanged;
+}
+void Table::clearChanged() {
+	mChanged = false;
 }
 
 }  // namespace cz::lastaapps::vimxel::table

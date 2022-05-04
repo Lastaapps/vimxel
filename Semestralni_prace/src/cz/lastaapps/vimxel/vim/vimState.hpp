@@ -10,13 +10,16 @@ namespace cz::lastaapps::vimxel::vim {
 struct VimState {
 	shared_ptr<display::State> mDisplayState;
 	shared_ptr<table::Table> mTable;
-	const vector<string> mArgs;
+	string mFilename;
+
 	table::Coordinates mPos;
 	table::Coordinates mViewPort;
+	string mErrorMsg;
+
 	VimState(
 	    shared_ptr<display::State> displayState,
 	    shared_ptr<table::Table> table,
-	    vector<string> args);
+	    const string& filename);
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

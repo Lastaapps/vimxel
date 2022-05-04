@@ -10,15 +10,16 @@ namespace cz::lastaapps::vimxel {
 int App::run(vector<string> args) {
 	log("App started");
 	printArgs(args);
+	string filename = args.size() >= 2 ? args[1] : "";
 	initNCurses();
     try {
 		log("Loading data");
-		shared_ptr<table::Table> table = loadTable(args);
+		shared_ptr<table::Table> table = loadTable(filename);
 		shared_ptr<table::CellContract> cellContract = table->createCellContract();
 		shared_ptr<display::State> dState = make_shared<display::State>();
 
 		log("Staring parser");
-		vim::VimParser vim(dState, table, args);
+		vim::VimParser vim(dState, table, filename);
 		shared_ptr<vim::VimContract> vimContract = vim.createContract();
 
 		log("Setting up display");
@@ -66,10 +67,10 @@ void App::printArgs(const vector<string> &args) {
 	mlog << endl;
 }
 
-shared_ptr<table::Table> App::loadTable(const vector<string> &args) {
+shared_ptr<table::Table> App::loadTable(const string &filename) {
     auto table = shared_ptr<table::Table>(new table::Table);
-	if (args.size() >= 2)
-		storage::Storage::loadData(args.at(1), table);
+	if (!filename.empty())
+		storage::Storage::loadData(filename, table);
 	return table;
 }
 

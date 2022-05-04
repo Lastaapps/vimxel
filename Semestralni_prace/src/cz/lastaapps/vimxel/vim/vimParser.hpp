@@ -39,7 +39,7 @@ class VimParser final {
 	VimParser(
 	    shared_ptr<display::State> state,
 	    shared_ptr<table::Table> table,
-	    const vector<string> args);
+	    const string& filename);
 	ParserResult handleKeyBoard();
 
 	shared_ptr<VimContract> createContract();
@@ -51,6 +51,7 @@ class VimParser final {
 	void notifyContracts(const VimInfo& info);
 	void updateInfo();
 	void unknowsInfo();
+	void errorInfo();
 };
 }  // namespace cz::lastaapps::vimxel::vim
 
