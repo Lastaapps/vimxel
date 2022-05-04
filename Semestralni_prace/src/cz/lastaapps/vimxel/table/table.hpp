@@ -25,6 +25,7 @@ class Table final {
 	void deleteCell(const Coordinates& coord);
 	shared_ptr<CellContract> createCellContract();
 	Coordinates tableSize() const;
+	bool isEmpty() const;
 
    private:
 	void updateContracts(const Coordinates& coord);

@@ -4,8 +4,9 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+#include <list>
 
+#include "vimContract.hpp"
 #include "parserResult.hpp"
 #include "../display/state.hpp"
 #include "../table/table.hpp"
@@ -16,6 +17,7 @@ class Parser final {
 	shared_ptr<display::State> mDisplayState;
 	shared_ptr<display::StateCallback> mDisplayStateCallback;
 	shared_ptr<table::Table> mTable;
+	list<shared_ptr<VimContract>> mContracts;
 
 	const vector<string> mArgs;
 	table::Coordinates mPos;
@@ -34,8 +36,11 @@ class Parser final {
 	    const vector<string> args);
 	ParserResult handleKeyBoard();
 
+	shared_ptr<VimContract> createContract();
+
    private:
 	void setPos(const table::Coordinates& coord);
+	void notifyContracts(const VimInfo& info);
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

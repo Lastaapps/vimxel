@@ -8,8 +8,10 @@ using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
 
-Display::Display( shared_ptr<State> state, shared_ptr<CellContract> contract)
-: mState(state), mCellContract(contract) {
+Display::Display( shared_ptr<State> state,
+shared_ptr<CellContract> contract,
+		shared_ptr<vim::VimContract> vimContract)
+: mState(state), mCellContract(contract), mVimContract(vimContract) {
 	// initial refresh
 	refresh();
 	updateDisplayConfig();
@@ -37,6 +39,7 @@ void Display::delWindows() {
 	delete rowDrawer;
 	delete colDrawer;
 	delete contentDrawer;
+	delete vimDrawer;
 	delwin(colNamesWin);
 	delwin(rowNamesWin);
 	delwin(vimWin);
@@ -68,6 +71,7 @@ void Display::updateDisplayConfig() {
 	rowDrawer = new RowDrawer(rowNamesWin, mPos, mViewPort);
 	colDrawer = new ColDrawer(colNamesWin, cellWidth, mPos, mViewPort);
 	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mCellContract);
+	vimDrawer = new VimDrawer(vimWin, mVimContract);
 }
 void Display::draw() {
 	drawSeparatingLines();
@@ -75,6 +79,7 @@ void Display::draw() {
 	rowDrawer->draw();
 	colDrawer->draw();
 	contentDrawer->draw();
+	vimDrawer->draw();
 }
 void Display::updateViewPort() {
 	const table::Coordinates scrSize = getTerminalSize();

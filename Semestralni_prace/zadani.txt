@@ -29,11 +29,10 @@ Tabulka jde uložit do formátu .vimcsv, z kterého půjdou načíst výrazy Tab
 jde exportovat do formátu .cvs, kde budou místo výrazů jejich hodnoty
 
 Ovládání bude možné pomocí klávesnice, VimXel již podle jména musí podporovat
-alespoň základní syntaxi programu vi. Bude mít pouze módy Select a Insert.
+alespoň základní syntaxi programu vi. Bude mít pouze módy Normal a Insert.
 
 Některé funcionality převzané z vi
 - Pohyb v buňkách:    h, j, k, l
-- Nápověda            :help
 - Jít na pozici       :A1
 - Uložit a uzavřít    :wq
 - Upravit buňku       i, Esc
@@ -70,4 +69,5 @@ různé druhy grafů
 
 ### Přidáno
 - export do cvs
+- funkce navíc
 - navigace a ovládání pomocí základní vi syntaxe

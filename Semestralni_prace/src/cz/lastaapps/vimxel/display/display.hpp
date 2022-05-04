@@ -6,11 +6,14 @@
 
 #include "../table/coordinate.hpp"
 #include "../table/cellContract.hpp"
+#include "../vim/vimContract.hpp"
 #include "state.hpp"
 #include "colDrawer.hpp"
 #include "posDrawer.hpp"
 #include "rowDrawer.hpp"
 #include "contentDrawer.hpp"
+#include "vimDrawer.hpp"
+
 using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
@@ -23,11 +26,13 @@ class Display final {
 	RowDrawer* rowDrawer = nullptr;
 	ColDrawer* colDrawer = nullptr;
 	ContentDrawer* contentDrawer = nullptr;
+	VimDrawer* vimDrawer = nullptr;
 
 	table::Coordinates mPos, mViewPort;
 	shared_ptr<State> mState;
 	shared_ptr<StateCallback> mStateCallback;
 	shared_ptr<CellContract> mCellContract;
+	shared_ptr<vim::VimContract> mVimContract;
 
 	struct DisplayStateCallback final : StateCallback {
 		Display * mParent;
@@ -39,7 +44,8 @@ class Display final {
    public:
 	Display(
 	    shared_ptr<State> stateCallback,
-	    shared_ptr<CellContract> contract);
+	    shared_ptr<CellContract> cellContract,
+		shared_ptr<vim::VimContract> vimContract);
 	~Display();
 	void draw();
 

@@ -14,14 +14,16 @@ int App::run(vector<string> args) {
     try {
 		log("Loading data");
 		shared_ptr<table::Table> table = loadTable(args);
+		shared_ptr<table::CellContract> cellContract = table->createCellContract();
 		shared_ptr<display::State> dState = make_shared<display::State>();
-
-		log("Setting up display");
-		display::Display display(dState, table->createCellContract());
-        display.draw();
 
 		log("Staring parser");
 		vim::Parser vim(dState, table, args);
+		shared_ptr<vim::VimContract> vimContract = vim.createContract();
+
+		log("Setting up display");
+		display::Display display(dState, cellContract, vimContract);
+        display.draw();
 		while(true) {
 			using Res = vim::ParserResult;
 			Res res = vim.handleKeyBoard();

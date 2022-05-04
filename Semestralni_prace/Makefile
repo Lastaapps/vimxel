@@ -5,8 +5,10 @@ CXX	=	g++
 DEBUG	= true
 ifeq ($(DEBUG), true)
 	CXXFLAGSDEBUG	= -g3 -fsanitize=address
+else
+	CXXFLAGSDEBUG	= -O3
 endif
-CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra -O3 $(CXXFLAGSDEBUG)
+CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra $(CXXFLAGSDEBUG)
 
 # External libraries used
 LIBS	=	-lncurses

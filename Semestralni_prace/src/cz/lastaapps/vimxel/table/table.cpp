@@ -63,5 +63,8 @@ Coordinates Table::tableSize() const {
 			biggest = key;
 	return biggest;
 }
+bool Table::isEmpty() const {
+	return mMap.empty();
+}
 
 }  // namespace cz::lastaapps::vimxel::table
