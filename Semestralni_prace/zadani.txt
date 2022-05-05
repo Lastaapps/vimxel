@@ -9,11 +9,13 @@ Buňky podporují
 
 Výrazy podporují
 - základní matematické operátory
+- závorky ()[]{}
 - funkce nad nad jinými výrazy
     - goniometrické sin, cos, tg, cotg
     - absolutní hodnotu abs
-    - spojování literálů concat
-    - mocnění pow
+    - spojování textových literálů a čísel concat
+    - mocnění pow a sqrt
+    - exponenciála a přirozený logaritmus
     - zaokrouhlení round, ceil, floor, teil
 - agregační funkce
     - součet oblasti sum

@@ -53,6 +53,8 @@ ParserResult NormalParser::handleKey(Mode & outMode) {
 		mState -> mTable -> updateCell(mState -> mPos, table::EmptyCell());
 		return Res::UPDATE;
 	}
+	default:
+		return Res::UNKNOWN;
 	}
 	return Res::NOPE;
 }

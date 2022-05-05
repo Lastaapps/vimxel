@@ -113,7 +113,7 @@ ParserResult CommandParser::tryJump() {
 			break;
 	}
 	if (!letters.empty() && pos > 0) {
-		mState->mDisplayState->setPosition(table::Coordinates(letters, pos - 1));
+		mState->mDisplayState->setPosition(table::Coordinates(letters, pos));
 		return ParserResult::UPDATE;
 	}
 	return ParserResult::UNKNOWN;

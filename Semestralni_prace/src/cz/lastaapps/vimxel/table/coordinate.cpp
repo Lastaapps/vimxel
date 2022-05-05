@@ -10,7 +10,7 @@ Coordinates::Coordinates() : Coordinates(0, 0) {}
 Coordinates::Coordinates(size_t x, size_t y)
     : mX(x), mY(y) {}
 Coordinates::Coordinates(const string& x, size_t y)
-    : Coordinates(fromString(x), y) {}
+    : Coordinates(fromString(x), y - 1) {}
 Coordinates::Coordinates(const Coordinates& src)
     : Coordinates(src.mX, src.mY) {}
 Coordinates::Coordinates(Coordinates&& src)

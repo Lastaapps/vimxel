@@ -5,6 +5,7 @@
 #include "display/display.hpp"
 #include "storage/storage.hpp"
 #include "vim/vimParser.hpp"
+#include <thread>
 
 namespace cz::lastaapps::vimxel {
 int App::run(vector<string> args) {
@@ -33,6 +34,7 @@ int App::run(vector<string> args) {
 			using Res = vim::ParserResult;
 			Res res = vim.handleKeyBoard();
 			if (res == Res::QUIT) break;
+			this_thread::sleep_for(10ms);
 		}
 	} catch (const std::exception& ex) {
 		destroyNCurses();
