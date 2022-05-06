@@ -40,6 +40,11 @@ void Display::delWindows() {
 	delete colDrawer;
 	delete contentDrawer;
 	delete vimDrawer;
+	posDrawer = nullptr;
+	rowDrawer = nullptr;
+	colDrawer = nullptr;
+	contentDrawer = nullptr;
+	vimDrawer = nullptr;
 	delwin(colNamesWin);
 	delwin(rowNamesWin);
 	delwin(vimWin);

@@ -15,9 +15,9 @@ enum class TokenType {
     BRACKET_LM, BRACKER_RM, // []
     BRACKET_LL, BRACKER_RL, // {}
     // functions
-    SQRT, POW, ABS, E, LOG,
+    SQRT, POW, ABS, E, LN, LOG2, LOG10,
     ROUND, CEIL, FLOOR, TAIL,
-    SIN, COS, TAN, COT, ARCSIN, ARCCOS, ARCTAN, ARCCTG,
+    SIN, COS, TAN, COT, ARCSIN, ARCCOS, ARCTAN, ARCCOT,
     SUM, MAX, MIN, AVG,
     CONCAT,
 };
