@@ -1,59 +1,39 @@
 # VimXel
-
-## Shrnutí
-### Vykreslování
-- nadřída drawer poskytující společné rozhraní pro vyhreslování jednotlivých částí UI
-
-### Vim ovládání
-- různé dekodéry vtupu z klávesnice podle druhu vstupu
+## Návrh polymorfismu
 
 ### Buňky
-- různé druhy buňek - prázdný, textová a s výrazem
+různé druhy buňek
+- prázdná
+- textová/číselná
+- s výrazem
 
 ### Výrazy
 Výraz bude převeden na binární strom, který bude postupně vyhodnocován.
 Každý node stromu může být
-- binární operátor
-    - +, -, *, /
-    - concat
-- unární operátor
-    - +, -
-    - sin, cos
-- agregační fce
-    - avg, sum
-- literály
-    - jednobuňkový
-        - odkaz na buňku
-        - číslo (int, double)
-        - text
-    - vícebuňkové
-        - oblast
+- term
+- operátor
+    ***
+    - binární operátora nebo funkce
+        - +, -, *, /
+        - pow, sqrt, ...
+    - unární operátor nebo funkce
+        - +, -
+        - sin, arcsin, ...
+        - e, ln, ...
+    - funkce n proměnných
+        - avg, sum, ...
+        - concat
+*** Dělení na operátory na číslech, textech a oblastích zde pro jednoduchost vynechám.
+    Takovéto dělení mi umožní kontrolovat vstupy na 1 místě a v nodech provádět
+    pouze výpočty, nekontrolovat typ vstupů.
+ 
+Term může být
+- číslo (floating)
+- text
+- oblast termů
 
-### A další drobnosti
+### A další
 - různé druhy chyb
-
-
-
-
-## Návrh polymorfismu
-
-Polymorfismus (dále jen pl) plánuji použít na mnoha místech, například pro
-různé druhy buněk, kde se mi bude hodit pro vyhodnocování obsahu buňky a její
-textová upravitelné podoby jinak pro buňky literálové a jinak pro výrazy. Jako
-v běžných tabulkových procesorech bude v tabulce zobrazena hodnota a mimo
-tabulku bude možnost výraz/literál upravit. A pro každý z nich platí jiná
-pravidla.
-
-Nadále plánuji pl. využívat při vyhodnocování výrazů. Nadefinuji si základní
-node a pak jeho specializace jako unární operátor, binární operátor, (funkce),
-agregační funkce, mezivýpočet, literál, hodnota buňky a hodnota oblasti buňek.
-Každý podvýraz bude muset implementovat společnou metodu getValue(). Binární a
-unární operace budou mít speciální společné konstruktory s odkazy na potomky.
-Celá struktura bude uložena ve stromu. Jako ochranu před cykly se již při
-stavbě stromu bude muset použít DFS algoritmus. Dále u literálů a hodnot buňek
-bude nutno rozliš mezi jejich typy - zda jsou kompatibilní s operací,
-sin("Ahoj") je co? Výsledkem všech operací bude buďto chyba propagovaná přes
-throw, nebo vypočítaná hodnota, na které bude muset být přetěžovaná metoda
-toString() pro vytvoření textu do tabulky a na uložení.
-
-Dále Vim má mnoho módů, každý z nich má vlastní parser a vlastní chování, rozhrají ovšem shodné
+- různé dekodéry vtupu z klávesnice podle Vim módu
+- nadřída drawer poskytující společné rozhraní pro vyhreslování jednotlivých částí UI
+- různé payloady tokenů při parsování výrazu buňky

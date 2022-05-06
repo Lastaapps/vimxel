@@ -40,7 +40,7 @@ class Tokenizer final {
     void updateDepend(const table::Selection& sel);
 
     map<string, TT> mFunMapper {
-        {"sqrt", TT::SQRT}, {"pow"s, TT::POW},
+        {"sqrt"s, TT::SQRT}, {"pow"s, TT::POW},
         {"abs"s, TT::ABS}, {"e"s, TT::E},
         {"ln"s, TT::LN}, {"log2"s, TT::LOG2}, {"log10"s, TT::LOG10},
 

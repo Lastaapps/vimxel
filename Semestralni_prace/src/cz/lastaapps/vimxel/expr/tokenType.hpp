@@ -10,12 +10,14 @@ enum class TokenType {
     // prior 1
     TIMES, DIVIDE,
     // prior 2
+    // terms
     DOUBLE, TEXT, CELL, SELECTION,
+    // brackets
     BRACKET_LS, BRACKER_RS, // ()
     BRACKET_LM, BRACKER_RM, // []
     BRACKET_LL, BRACKER_RL, // {}
     // functions
-    SQRT, POW, ABS, E, LN, LOG2, LOG10,
+    POW, SQRT, ABS, E, LN, LOG2, LOG10,
     ROUND, CEIL, FLOOR, TAIL,
     SIN, COS, TAN, COT, ARCSIN, ARCCOS, ARCTAN, ARCCOT,
     SUM, MAX, MIN, AVG,
