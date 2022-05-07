@@ -11,10 +11,10 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using TT = TokenType;
-using ST = shared_ptr<Token>;
 class Tokenizer final {
-    using SItr = string::const_iterator;
+	using TT = TokenType;
+	using ST = shared_ptr<Token>;
+	using SItr = string::const_iterator;
     string mString;
     SItr mPos;
 
@@ -23,6 +23,7 @@ class Tokenizer final {
     public:
     Tokenizer(const string& string);
     ST nextToken();
+    void skipAll();
     const set<table::Coordinates>& getDependent() const;
     private:
     bool parseOperators(Token* & out);

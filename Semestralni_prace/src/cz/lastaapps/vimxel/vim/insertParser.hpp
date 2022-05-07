@@ -3,7 +3,6 @@
 #include "absParser.hpp"
 #include "vimState.hpp"
 #include "../table/coordinate.hpp"
-#include "../table/cell.hpp"
 
 using namespace std;
 namespace cz::lastaapps::vimxel::vim {

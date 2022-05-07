@@ -2,6 +2,7 @@
 #define COORDINATE_H
 #include <string>
 #include <iostream>
+#include <functional>
 
 using namespace std;
 namespace cz::lastaapps::vimxel::table {
@@ -47,4 +48,11 @@ class Coordinates final {
 ostream& operator<<(ostream& out, const Coordinates& c);
 
 }  // namespace cz::lastaapps::vimxel::table
+
+template<>
+struct std::hash<cz::lastaapps::vimxel::table::Coordinates> {
+    std::size_t operator()(const cz::lastaapps::vimxel::table::Coordinates & coord) const noexcept {
+		return coord.x() + (coord.y() << (sizeof(size_t) * 8 / 2));
+	}
+};
 #endif

@@ -1,5 +1,4 @@
 #include "tokenizer.hpp"
-
 #include <stdexcept>
 
 using namespace std;
@@ -7,7 +6,7 @@ namespace cz::lastaapps::vimxel::expr {
 Tokenizer::Tokenizer(const string& string)
     : mString(string), mPos(mString.begin()) {}
 
-ST Tokenizer::nextToken() {
+shared_ptr<Token> Tokenizer::nextToken() {
 	skipSpaces();
 	Token* token = nullptr;
 	if (mPos == mString.end()) {
@@ -21,6 +20,10 @@ ST Tokenizer::nextToken() {
 	if (parseFun(token)) return ST(token);
 	if (parseOperators(token)) return ST(token);
 	throw invalid_argument("Unexpected character at position: "s + to_string(mPos - mString.begin()));
+}
+
+void Tokenizer::skipAll() {
+	while (nextToken() -> type != TT::NONE);
 }
 
 bool Tokenizer::parseOperators(Token*& out) {
@@ -119,6 +122,7 @@ bool Tokenizer::parseCell(Token*& out) {
 	size_t cellIndex;
 	while (mPos != mString.end() && (c = *mPos++, 'A' <= c && c <= 'Z'))
 		cellName += c;
+	if (mPos != mString.end()) mPos--;
 	while (mPos != mString.end() && (c = *mPos++, '0' <= c && c <= '9')) {
 		cellIndex *= 10;
 		cellIndex += c - '0';

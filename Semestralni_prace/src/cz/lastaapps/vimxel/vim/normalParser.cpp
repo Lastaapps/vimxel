@@ -50,7 +50,7 @@ ParserResult NormalParser::handleKey(Mode & outMode) {
 		mState -> mDisplayState->moveViewX(true);
 		return Res::UPDATE;
 	case 'x': {
-		mState -> mTable -> updateCell(mState -> mPos, table::EmptyCell());
+		mState -> mTable -> updateCell(mState -> mPos, "");
 		return Res::UPDATE;
 	}
 	default:

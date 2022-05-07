@@ -2,6 +2,7 @@ lastope2
 lastope2.zip
 test
 logs.txt
+err.txt
 *.o
 *.d
 doc/

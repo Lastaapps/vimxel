@@ -59,12 +59,12 @@ compile:	$(USERNAME)
 
 # Runs compiled binary
 run:
-	@./$(USERNAME) $()
+	@./$(USERNAME) 2> err.txt
 
 # Tests
 compile_test:	$(TEST_FILE)
 run_test:
-	@./$(TEST_FILE)
+	@./$(TEST_FILE) 2> err.txt
 
 
 
@@ -122,5 +122,5 @@ clean:
 	rm -f $(TEST_OBJECTS) $(TEST_DEPENDS) $(TEST_FILE)
 	rm -f core
 	rm -fr doc
-	rm -f "logs.txt"
+	rm -f logs.txt err.txt
 

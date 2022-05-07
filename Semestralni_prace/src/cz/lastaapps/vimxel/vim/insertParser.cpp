@@ -69,9 +69,9 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 
 void InsertParser::saveContent() {
 	if (mText.empty())
-		mState->mTable->updateCell(mPos, table::EmptyCell());
+		mState->mTable->updateCell(mPos, "");
 	else
-		mState->mTable->updateCell(mPos, table::TextCell(mText));
+		mState->mTable->updateCell(mPos, mText);
 }
 
 bool InsertParser::checkLoad() {

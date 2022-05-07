@@ -7,20 +7,9 @@ namespace cz::lastaapps::vimxel::expr {
 string ConcatNode::getName() const { return "concat"; }
 ST ConcatNode::getValue() const {
     ostringstream text;
-    text.precision(8);
-    for (const auto& term : mChildren) {
-        auto castedText = dynamic_pointer_cast<TextTerm>(term);
-        if (castedText != nullptr) {
-			text << castedText -> getValue();
-            continue;
-        }
-        auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
-        if (castedDouble != nullptr) {
-			text<< castedDouble -> getValue();
-            continue;
-		}
-		// else shouldn't happen
-	}
+    for (const auto& term : mChildren)
+		text << term->toString();
+
     return make_shared<TextTerm>(text.str());
 }
 

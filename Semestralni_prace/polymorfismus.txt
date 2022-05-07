@@ -4,8 +4,7 @@
 ### Buňky
 různé druhy buňek
 - prázdná
-- textová/číselná
-- s výrazem
+- s obsahem, tj. textová/číselná
 
 ### Výrazy
 Výraz bude převeden na binární strom, který bude postupně vyhodnocován.

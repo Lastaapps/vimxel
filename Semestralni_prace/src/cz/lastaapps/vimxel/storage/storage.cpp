@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "../log.hpp"
-#include "../table/cell.hpp"
 #include "../table/coordinate.hpp"
 #include "../table/table.hpp"
 
@@ -36,8 +35,27 @@ void Storage::saveData(shared_ptr<table::Table> table, const string& path) {
 }
 
 void Storage::exportData(shared_ptr<table::Table> table, const string& path) {
-	// TODO update after expression evaulation is done
-	saveData(table, path);
+	auto size = table->tableSize();
+	ofstream file;
+	openFileForWrite(path, file);
+	for (size_t y = 0; y < size.y(); y++) {
+		bool isFirst = true;
+		for (size_t x = 0; x < size.x(); x++) {
+			if (isFirst)
+				isFirst = false;
+			else
+				file << DELIMITER;
+			const table::Cell& cell = table->getCell(table::Coordinates(x, y));
+			file << escapeText(cell.getValue());
+		}
+		file << LINE_DELIMITER;
+	}
+	// drop latests \n
+	file.close();
+	auto filePath = filesystem::path(path);
+	size_t fileSize = file_size(filePath);
+	if (fileSize != 0)
+		resize_file(filePath, fileSize - 1);
 }
 
 void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
@@ -47,7 +65,7 @@ void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
 		for (size_t x = 0; file; x++) {
 			bool lineEnd;
 			string cellContent = move(importText(file, lineEnd));
-			table->updateCell(table::Coordinates(x, y), table::TextCell(cellContent));
+			table->updateCell(table::Coordinates(x, y), cellContent);
 			if (lineEnd) break;
 		}
 	}
