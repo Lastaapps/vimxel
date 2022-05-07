@@ -9,12 +9,13 @@
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
+using SN = shared_ptr<Node>;
 
 class UnOpNode : public OperatorNode {
     protected:
     const ST mChild;
     public:
-    UnOpNode(Node * child);
+    UnOpNode(SN child);
 };
 
 struct UnOpNumNode : public UnOpNode {

@@ -17,8 +17,8 @@ struct PowNode final : public BinOpNumNode {
     ST getValue() const override;
 };
 // sqrt
-struct SqrtNode final : public BinOpNumNode {
-    using BinOpNumNode::BinOpNumNode;
+struct SqrtNode final : public UnOpNumNode {
+    using UnOpNumNode::UnOpNumNode;
     string getName() const override;
     ST getValue() const override;
 };
@@ -27,6 +27,11 @@ struct AbsNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
     ST getValue() const override;
+};
+struct ModuloNode final : public BinOpNumNode {
+    using BinOpNumNode::BinOpNumNode;
+    ST getValue() const override;
+    string getName() const override;
 };
 // e
 struct ENode final : public UnOpNumNode {
@@ -49,6 +54,12 @@ struct Log2Node final : public UnOpNumNode {
 // log10
 struct Log10Node final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
+    string getName() const override;
+    ST getValue() const override;
+};
+// log
+struct LogNode final : public BinOpNumNode {
+    using BinOpNumNode::BinOpNumNode;
     string getName() const override;
     ST getValue() const override;
 };

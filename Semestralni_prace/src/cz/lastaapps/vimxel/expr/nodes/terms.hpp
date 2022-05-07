@@ -8,29 +8,33 @@ using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 
 struct Term {
-    virtual ~Term() = default;
+	virtual ~Term() = default;
+};
+struct SingleTerm : public Term {};
+
+class DoubleTerm final : public SingleTerm {
+	const long double mValue;
+
+   public:
+	explicit DoubleTerm(long double value);
+	long double getValue() const;
 };
 
-class DoubleTerm : public Term {
-    long double mValue;
-    public:
-    DoubleTerm(long double value);
-    long double getValue() const;
+class TextTerm final : public SingleTerm {
+	const string mValue;
+
+   public:
+	explicit TextTerm(const string& value);
+	const string& getValue() const;
 };
 
-class TextTerm : public Term {
-    string mValue;
-    public:
-    TextTerm(const string& value);
-    const string& getValue() const;
-};
+class AreaTerm final : public Term {
+	const vector<shared_ptr<SingleTerm>> mValue;
 
-class AreaTerm : public Term {
-    vector<shared_ptr<Term>> mValue;
-    public:
-	 AreaTerm(const string& value);
-	 const vector<shared_ptr<Term>>& getValue() const;
+   public:
+	explicit AreaTerm(vector<shared_ptr<SingleTerm>> value);
+	const vector<shared_ptr<SingleTerm>>& getValue() const;
 };
-}
+}  // namespace cz::lastaapps::vimxel::expr
 
 #endif

@@ -28,8 +28,8 @@ struct FloorNode final : public UnOpNumNode {
     string getName() const override;
     ST getValue() const override;
 };
-// tail
-struct TailNode final : public UnOpNumNode {
+// trunc
+struct TruncNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
     ST getValue() const override;

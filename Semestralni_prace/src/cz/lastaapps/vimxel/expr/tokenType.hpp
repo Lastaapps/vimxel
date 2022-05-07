@@ -17,11 +17,11 @@ enum class TokenType {
     BRACKET_LM, BRACKER_RM, // []
     BRACKET_LL, BRACKER_RL, // {}
     // functions
-    POW, SQRT, ABS, E, LN, LOG2, LOG10,
-    ROUND, CEIL, FLOOR, TAIL,
+    POW, SQRT, ABS, MODULO, E, LN, LOG2, LOG10, LOG,
+    ROUND, CEIL, FLOOR, TRUNC,
     SIN, COS, TAN, COT, ARCSIN, ARCCOS, ARCTAN, ARCCOT,
     SUM, MAX, MIN, AVG,
-    CONCAT,
+    CONCAT, LOWER, UPPER,
 };
 } // namespace cz::lastaapps::vimxel:expr
 

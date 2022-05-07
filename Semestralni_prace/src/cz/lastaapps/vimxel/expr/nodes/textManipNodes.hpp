@@ -3,6 +3,7 @@
 #include <memory>
 #include "node.hpp"
 #include "terms.hpp"
+#include "unOperatorNodes.hpp"
 #include "multiOperatorNodes.hpp"
 
 using namespace std;
@@ -15,6 +16,21 @@ struct ConcatNode final : public MultiOpNumOrTextNode {
     string getName() const override;
     ST getValue() const override;
 };
+
+// lower
+struct LowerNode final : public UnOpTextNode {
+    using UnOpTextNode::UnOpTextNode;
+    string getName() const override;
+    ST getValue() const override;
+};
+
+// upper
+struct UpperNode final : public UnOpTextNode {
+    using UnOpTextNode::UnOpTextNode;
+    string getName() const override;
+    ST getValue() const override;
+};
+
 }
 
 #endif

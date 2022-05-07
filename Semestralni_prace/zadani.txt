@@ -17,6 +17,7 @@ Výrazy podporují
     - mocnění pow a sqrt
     - exponenciála a přirozený logaritmus
     - zaokrouhlení round, ceil, floor, teil
+    - velikost textu lower a uppper
 - agregační funkce
     - součet oblasti sum
     - průměrná hodnota oblasti avg

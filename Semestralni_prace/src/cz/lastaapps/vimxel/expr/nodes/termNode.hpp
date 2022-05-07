@@ -10,7 +10,7 @@ using ST = shared_ptr<Term>;
 class TermNode final : Node {
     const ST mTerm;
     public:
-    TermNode(shared_ptr<Term> term);
+    TermNode(ST term);
     ST getValue() const override;
 };
 }  // namespace cz::lastaapps::vimxel::expr

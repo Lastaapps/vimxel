@@ -42,16 +42,16 @@ class Tokenizer final {
     map<string, TT> mFunMapper {
         {"sqrt"s, TT::SQRT}, {"pow"s, TT::POW},
         {"abs"s, TT::ABS}, {"e"s, TT::E},
-        {"ln"s, TT::LN}, {"log2"s, TT::LOG2}, {"log10"s, TT::LOG10},
+        {"ln"s, TT::LN}, {"log2"s, TT::LOG2}, {"log10"s, TT::LOG10}, {"log"s, TT::LOG},
 
-        {"round"s, TT::ROUND}, {"ceil"s, TT::CEIL}, {"floor"s, TT::FLOOR}, {"tail"s, TT::TAIL},
+        {"round"s, TT::ROUND}, {"ceil"s, TT::CEIL}, {"floor"s, TT::FLOOR}, {"trunc"s, TT::TRUNC},
 
         {"sin"s, TT::SIN}, {"cos"s, TT::COS}, {"tan"s, TT::TAN}, {"cot"s, TT::COT},
         {"arcsin"s, TT::ARCSIN}, {"arccos"s, TT::ARCCOS}, {"arctan"s, TT::ARCTAN}, {"arccot"s, TT::ARCCOT},
 
         {"sum"s, TT::SUM}, {"max"s, TT::MAX}, {"min"s, TT::MIN}, {"avg"s, TT::AVG},
 
-        {"concat"s, TT::CONCAT},
+        {"concat"s, TT::CONCAT}, {"lower"s, TT::LOWER}, {"upper"s, TT::UPPER},
         //{""s, TT::},
     };
 };

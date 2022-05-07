@@ -9,12 +9,13 @@
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
+using SN = shared_ptr<Node>;
 
 class BinOpNode : public OperatorNode {
     protected:
     const ST mLeft, mRight;
     public:
-    BinOpNode(Node * left, Node * right);
+    BinOpNode(SN left, SN right);
 };
 
 struct BinOpNumNode : public BinOpNode {

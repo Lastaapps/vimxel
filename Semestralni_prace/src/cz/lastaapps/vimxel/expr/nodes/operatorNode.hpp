@@ -8,7 +8,7 @@ using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 struct OperatorNode : Node {
-    virtual string getName() const = 0;
+    virtual string getName() const { return "unknown"; };
 };
 }  // namespace cz::lastaapps::vimxel::expr
 

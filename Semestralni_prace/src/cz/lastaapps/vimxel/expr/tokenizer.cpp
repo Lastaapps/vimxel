@@ -42,6 +42,9 @@ bool Tokenizer::parseOperators(Token*& out) {
 	case '/':
 		out = new Token(TT::DIVIDE);
 		return true;
+	case '%':
+		out = new Token(TT::MODULO);
+		return true;
 	case '(':
 		out = new Token(TT::BRACKET_LS);
 		return true;
