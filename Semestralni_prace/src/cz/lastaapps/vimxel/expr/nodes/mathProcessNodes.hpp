@@ -11,28 +11,28 @@ namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 
 // round
-struct RoundNode : public UnOpNumNode {
+struct RoundNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // ceil
-struct CeilNode : public UnOpNumNode {
+struct CeilNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // floor
-struct FloorNode : public UnOpNumNode {
+struct FloorNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // tail
-struct TailNode : public UnOpNumNode {
+struct TailNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 }
 

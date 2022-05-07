@@ -10,28 +10,30 @@ namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 
 // sum
-struct SumNode : public MultiOpNumOrAreaNode {
+struct SumNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
+    private:
+    void addTerm(ST term, long double& sum) const;
 };
 // max
-struct MaxNode : public MultiOpNumOrAreaNode {
+struct MaxNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // min
-struct MinNode : public MultiOpNumOrAreaNode {
+struct MinNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // avg
-struct AvgNode : public MultiOpNumOrAreaNode {
+struct AvgNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 }
 

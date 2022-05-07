@@ -13,25 +13,25 @@ using ST = shared_ptr<Term>;
 
 class MultiOpNode : public OperatorNode {
     protected:
-    vector<ST> mChildren;
+    const vector<ST> mChildren;
     public:
-    MultiOpNode(vector<Node*> children);
+    MultiOpNode(vector<ST> children);
 };
 
 struct MultiOpNumNode : public MultiOpNode {
-    MultiOpNumNode(vector<Node*> children);
+    MultiOpNumNode(vector<ST> children);
 };
 
 struct MultiOpNumOrAreaNode : public MultiOpNode {
-    MultiOpNumOrAreaNode(vector<Node*> children);
+    MultiOpNumOrAreaNode(vector<ST> children);
 };
 
 struct MultiOpNumOrTextNode : public MultiOpNode {
-    MultiOpNumOrTextNode(vector<Node*> children);
+    MultiOpNumOrTextNode(vector<ST> children);
 };
 
 struct MultiOpTextNode : public MultiOpNode {
-    MultiOpTextNode(vector<Node*> children);
+    MultiOpTextNode(vector<ST> children);
 };
 }
 

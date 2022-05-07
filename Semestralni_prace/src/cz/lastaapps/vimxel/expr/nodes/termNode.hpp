@@ -8,10 +8,10 @@ using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 class TermNode final : Node {
-    ST mTerm;
+    const ST mTerm;
     public:
     TermNode(shared_ptr<Term> term);
-    ST getValue() override;
+    ST getValue() const override;
 };
 }  // namespace cz::lastaapps::vimxel::expr
 

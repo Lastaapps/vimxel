@@ -12,17 +12,19 @@ using ST = shared_ptr<Term>;
 
 class UnOpNode : public OperatorNode {
     protected:
-    ST mChild;
+    const ST mChild;
     public:
     UnOpNode(Node * child);
 };
 
 struct UnOpNumNode : public UnOpNode {
-    UnOpNumNode(Node * child);
+    using UnOpNode::UnOpNode;
+    shared_ptr<DoubleTerm> casted() const;
 };
 
 struct UnOpTextNode : public UnOpNode {
-    UnOpTextNode(Node * child);
+    using UnOpNode::UnOpNode;
+    shared_ptr<TextTerm> casted() const;
 };
 }
 

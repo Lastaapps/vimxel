@@ -10,10 +10,10 @@ namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 
 // concat
-struct ConcatNode : public MultiOpNumOrTextNode {
+struct ConcatNode final : public MultiOpNumOrTextNode {
     using MultiOpNumOrTextNode::MultiOpNumOrTextNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 }
 

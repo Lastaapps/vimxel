@@ -11,52 +11,52 @@ namespace cz::lastaapps::vimxel::expr {
 using ST = shared_ptr<Term>;
 
 // sin
-struct SinNode : public UnOpNumNode {
+struct SinNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // cos
-struct CosNode : public UnOpNumNode {
+struct CosNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // tan
-struct TanNode : public UnOpNumNode {
+struct TanNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // cot
-struct CotNode : public UnOpNumNode {
+struct CotNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // arcsin
-struct ArcsinNode : public UnOpNumNode {
+struct ArcsinNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // arccos
-struct ArccosNode : public UnOpNumNode {
+struct ArccosNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // arctan
-struct ArctanNode : public UnOpNumNode {
+struct ArctanNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 // arccot
-struct ArccotNode : public UnOpNumNode {
+struct ArccotNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() override;
+    ST getValue() const override;
 };
 }
 

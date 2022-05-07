@@ -12,17 +12,21 @@ using ST = shared_ptr<Term>;
 
 class BinOpNode : public OperatorNode {
     protected:
-    ST mLeft, mRight;
+    const ST mLeft, mRight;
     public:
     BinOpNode(Node * left, Node * right);
 };
 
 struct BinOpNumNode : public BinOpNode {
-    BinOpNumNode(Node * left, Node * right);
+    using BinOpNode::BinOpNode;
+    shared_ptr<DoubleTerm> castedLeft() const;
+    shared_ptr<DoubleTerm> castedRight() const;
 };
 
 struct BinOpTextNode : public BinOpNode {
-    BinOpTextNode(Node * left, Node * right);
+    using BinOpNode::BinOpNode;
+    shared_ptr<TextTerm> castedLeft() const;
+    shared_ptr<TextTerm> castedRight() const;
 };
 }
 
