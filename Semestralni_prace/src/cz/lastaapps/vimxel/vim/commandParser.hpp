@@ -5,6 +5,8 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::vim {
+using Res = vim::ParserResult;
+
 class CommandParser final : public AbsParser {
     private:
     string mCommand = "";

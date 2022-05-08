@@ -7,7 +7,7 @@ namespace cz::lastaapps::vimxel::expr {
 
 // round
 string RoundNode::getName() const { return "round"; }
-ST RoundNode::getValue() const {
+STerm RoundNode::getValue() const {
     return make_shared<DoubleTerm>(
         llroundl(casted() -> getValue())
     );
@@ -15,7 +15,7 @@ ST RoundNode::getValue() const {
 
 // ceil
 string CeilNode::getName() const { return "ceil"; }
-ST CeilNode::getValue() const {
+STerm CeilNode::getValue() const {
     return make_shared<DoubleTerm>(
         ceill(casted() -> getValue())
     );
@@ -23,7 +23,7 @@ ST CeilNode::getValue() const {
 
 // floor
 string FloorNode::getName() const { return "floor"; }
-ST FloorNode::getValue() const {
+STerm FloorNode::getValue() const {
     return make_shared<DoubleTerm>(
         floorl(casted() -> getValue())
     );
@@ -31,7 +31,7 @@ ST FloorNode::getValue() const {
 
 // trunc
 string TruncNode::getName() const { return "trunc"; }
-ST TruncNode::getValue() const {
+STerm TruncNode::getValue() const {
     return make_shared<DoubleTerm>(
         truncl(casted() -> getValue())
     );

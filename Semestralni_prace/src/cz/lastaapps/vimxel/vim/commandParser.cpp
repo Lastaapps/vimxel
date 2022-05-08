@@ -13,7 +13,6 @@ CommandParser::CommandParser(VimState* state)
     : mState(state) {}
 
 ParserResult CommandParser::handleKey(Mode& outMode) {
-	using Res = ParserResult;
 	int ch = getch();
 	if (ch == ERR) return Res::NOPE;
 

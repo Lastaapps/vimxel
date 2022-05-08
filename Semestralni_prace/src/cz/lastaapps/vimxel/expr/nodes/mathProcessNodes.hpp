@@ -8,31 +8,32 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
 
 // round
 struct RoundNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 // ceil
 struct CeilNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 // floor
 struct FloorNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 // trunc
 struct TruncNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 }
 

@@ -1,9 +1,10 @@
 #include "table.hpp"
 
-#include "../log.hpp"
-#include "cell.hpp"
+#include <cmath>
 #include "../expr/parser.hpp"
 #include "../expr/tokenizer.hpp"
+#include "../log.hpp"
+#include "cell.hpp"
 
 namespace cz::lastaapps::vimxel::table {
 
@@ -67,7 +68,7 @@ void Table::clearChanged() {
 }
 
 // --- Cycles and expressions handling -------------------------------------
-void Table::updateCellAll(const Coordinates& coord, const string& content, ST term) {
+void Table::updateCellAll(const Coordinates& coord, const string& content, SSingleTerm term) {
 	mMap.insert_or_assign(coord, make_unique<TextCell>(content, term, false));
 }
 void Table::updateCellInCycle(const Coordinates& coord, bool inCycle) {
@@ -79,7 +80,7 @@ void Table::updateCellInCycle(const Coordinates& coord, bool inCycle) {
 bool Table::isCellInCycle(const Coordinates& coord) const {
 	return getCell(coord).isInCycle();
 }
-void Table::updateCellWithResult(const Coordinates& coord, ST term) {
+void Table::updateCellWithResult(const Coordinates& coord, SSingleTerm term) {
 	const Cell& current = getCell(coord);
 	if (dynamic_cast<const EmptyCell*>(&current) != nullptr) return;
 
@@ -87,7 +88,6 @@ void Table::updateCellWithResult(const Coordinates& coord, ST term) {
 }
 
 void Table::updateCell(const Coordinates& coord, const string& content) {
-	using CT = ContentType;
 	mChanged = true;
 	destroyOldCell(coord);
 
@@ -98,13 +98,21 @@ void Table::updateCell(const Coordinates& coord, const string& content) {
 		break;
 	}
 	case CT::TEXT: {
-		updateCellAll(coord, content, make_shared<expr::TextTerm>(content));
+		long double numberValue;
+		if (tryParseNumber(content, numberValue))
+			updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
+		else
+			updateCellAll(coord, content, make_shared<expr::TextTerm>(content));
 		onTextCellUpdated(coord, content);
 		break;
 	}
 	case CT::ESCAPED: {
 		const string dropFirst = string(content.begin() + 1, content.end());
-		updateCellAll(coord, content, make_shared<expr::TextTerm>(dropFirst));
+		long double numberValue;
+		if (tryParseNumber(dropFirst, numberValue))
+			updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
+		else
+			updateCellAll(coord, content, make_shared<expr::TextTerm>(dropFirst));
 		onTextCellUpdated(coord, content);
 		break;
 	}
@@ -117,6 +125,53 @@ void Table::updateCell(const Coordinates& coord, const string& content) {
 		throw runtime_error("Unknown content type");
 	}
 }
+bool Table::tryParseNumber(const string& content, long double& out) {
+	string noSpaces;
+	for (const char c : content) {
+		if (!isspace(c)) noSpaces += tolower(c);
+	}
+	if (noSpaces.empty()) return false;
+
+	if (noSpaces == "inf") {
+		out = INFINITY;
+		return true;
+	}
+	if (noSpaces == "-inf") {
+		out = -1 * INFINITY;
+		return true;
+	}
+	if (noSpaces == "nan" || noSpaces == "-nan") {
+		out = NAN;
+		return true;
+	}
+
+	char c;
+	auto mPos = noSpaces.begin();
+	long double num = 0;
+	while (true) {
+		if (mPos == noSpaces.end()) break;
+		if (!isdigit(c = *mPos++)) {
+			mPos--;
+			break;
+		}
+		num *= 10;
+		num += c - '0';
+	}
+	if (mPos != noSpaces.end()) {
+		if (*mPos++ == '.') {
+			long double pow = 1;
+			while (mPos != noSpaces.end() && isdigit(c = *mPos++)) {
+				pow *= 10;
+				num += (c - '0') / pow;
+			}
+		} else
+			mPos--;
+	}
+	if (mPos != noSpaces.end())
+		return false;
+	out = num;
+	return true;
+}
 void Table::destroyOldCell(const Coordinates& coord) {
 	removeDependencies(coord);
 }
@@ -124,7 +179,7 @@ void Table::destroyOldCell(const Coordinates& coord) {
 void Table::onTextCellUpdated(const Coordinates& coord, const string&) {
 	auto range = mDependencies.equal_range(coord);
 	for (auto itr = range.first; itr != range.second; ++itr) {
-		const Coordinates& dep = itr -> second;
+		const Coordinates& dep = itr->second;
 		recalculate(dep);
 	}
 	updateContracts(coord);
@@ -152,7 +207,6 @@ void Table::createExecutionPlan(const Coordinates& coord, ExecutionPlan& plan, C
 	cycleRoots = args.cycleRoots;
 }
 void Table::createExecutionPlanRecursive(const Coordinates& coord, ExecutionArgs& args, size_t depth) const {
-	
 	bool hasBeenVisited = args.visited.find(coord) != args.visited.end();
 	if (hasBeenVisited) {
 		args.cycleRoots.insert(coord);
@@ -161,13 +215,13 @@ void Table::createExecutionPlanRecursive(const Coordinates& coord, ExecutionArgs
 	args.visited.insert(coord);
 
 	auto order = args.order.find(coord);
-	if (order == args.order.end() || order -> second < depth)
+	if (order == args.order.end() || order->second < depth)
 		args.order[coord] = depth;
 
 	++depth;
 	auto range = mDependencies.equal_range(coord);
 	for (auto itr = range.first; itr != range.second; ++itr) {
-		const Coordinates& dest = itr -> second;
+		const Coordinates& dest = itr->second;
 		createExecutionPlanRecursive(dest, args, depth);
 	}
 	args.visited.erase(coord);
@@ -180,10 +234,11 @@ bool Table::ExecutionItem::operator<(const ExecutionItem& other) const {
 
 // evaluation
 void Table::evaluate(ExecutionPlan& plan, const CycleRootsSet& cycleRoots) {
-	while(!plan.empty()) {
+	while (!plan.empty()) {
 		const Coordinates coord = plan.top().coord;
 		plan.pop();
 		evaluateCell(coord, cycleRoots);
+		updateContracts(coord);
 	}
 }
 void Table::evaluateCell(const Coordinates& coord, const CycleRootsSet& cycleRoots) {
@@ -194,14 +249,17 @@ void Table::evaluateCell(const Coordinates& coord, const CycleRootsSet& cycleRoo
 	}
 	// evaluate expression
 	const string& expression = getCell(coord).getContent();
-	auto tokenizer = make_shared<expr::Tokenizer>(expression);
+	auto tokenizer = make_shared<expr::Tokenizer>(string(expression.begin() + 1, expression.end()));
 
-	auto termProvieder = [&](const Coordinates& coord){
+	auto termProvieder = [&](const Coordinates& coord) {
 		return getCell(coord).getTerm();
 	};
 	expr::Parser p(tokenizer, termProvieder);
 	auto term = p.evaulate();
-	auto depend = tokenizer -> getDependent();
+	auto singleTerm = dynamic_pointer_cast<expr::SingleTerm>(term);
+	if (singleTerm == nullptr)
+		throw invalid_argument("Area reference cannot be saved in a cell");
+	auto depend = tokenizer->getDependent();
 
 	// do you depend on a cycle or an error
 	bool dependOnCycleOrError = checkDependOnCycle(coord, depend);
@@ -211,8 +269,7 @@ void Table::evaluateCell(const Coordinates& coord, const CycleRootsSet& cycleRoo
 	}
 
 	// update data in database
-	updateCellWithResult(coord, term);
-	updateContracts(coord);
+	updateCellWithResult(coord, singleTerm);
 }
 
 bool Table::checkDependOnCycle(const Coordinates&, const set<Coordinates>& depend) const {
@@ -227,13 +284,12 @@ void Table::clearDependent(const Coordinates& coord) {
 	unordered_set<Coordinates> handled;
 	queue<Coordinates> toResolve;
 	toResolve.push(coord);
-	while ( !toResolve.empty()) {
+	while (!toResolve.empty()) {
 		const Coordinates c = toResolve.front();
 		toResolve.pop();
 		const auto range = mDependencies.equal_range(c);
 		for (auto itr = range.first; itr != range.second; ++itr) {
-
-			const Coordinates& toClear = itr -> second;
+			const Coordinates& toClear = itr->second;
 			auto inSet = handled.find(toClear);
 			if (inSet == handled.end()) {
 				handled.insert(toClear);
@@ -254,18 +310,18 @@ void Table::addDependencies(const Coordinates& coord, const set<Coordinates>& de
 void Table::removeDependencies(const Coordinates& coord) {
 	auto range = mDependenciesInversed.equal_range(coord);
 	for (auto itr = range.first; itr != range.second; ++itr) {
-		auto secRange = mDependencies.equal_range(itr -> second);
+		auto secRange = mDependencies.equal_range(itr->second);
 		for (auto secItr = secRange.first; secItr != secRange.second;) {
 			auto oldItr = secItr;
 			secItr++;
-			if (oldItr -> second == coord)
+			if (oldItr->second == coord)
 				mDependencies.erase(oldItr);
 		}
 	}
-		mDependencies.erase(coord);
+	mDependenciesInversed.erase(coord);
 }
-ContentType Table::isExpression(const string& text) const {
-	using CT = ContentType;
+CellContentType Table::isExpression(const string& text) const {
+	using CT = CellContentType;
 	if (text.empty()) return CT::EMPTY;
 	if (text[0] != '=') return CT::TEXT;
 	if (text.size() >= 2 && text[1] == '=') return CT::ESCAPED;

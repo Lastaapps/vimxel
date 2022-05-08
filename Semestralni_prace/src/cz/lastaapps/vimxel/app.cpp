@@ -31,9 +31,8 @@ int App::run(vector<string> args) {
 				display.recreate();
 				display.draw();
 			}
-			using Res = vim::ParserResult;
-			Res res = vim.handleKeyBoard();
-			if (res == Res::QUIT) break;
+			vim::Res res = vim.handleKeyBoard();
+			if (res == vim::Res::QUIT) break;
 			this_thread::sleep_for(10ms);
 		}
 	} catch (const std::exception& ex) {

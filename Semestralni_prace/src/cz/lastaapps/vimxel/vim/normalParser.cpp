@@ -9,7 +9,6 @@ NormalParser::NormalParser(VimState* state)
     : mState(state) {}
 
 ParserResult NormalParser::handleKey(Mode & outMode) {
-	using Res = ParserResult;
 	int ch = getch();
 	if (ch == ERR) return Res::NOPE;
 	switch (ch) {

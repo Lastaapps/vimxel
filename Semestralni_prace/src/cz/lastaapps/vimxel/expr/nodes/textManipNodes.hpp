@@ -8,27 +8,28 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
 
 // concat
 struct ConcatNode final : public MultiOpNumOrTextNode {
     using MultiOpNumOrTextNode::MultiOpNumOrTextNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 
 // lower
 struct LowerNode final : public UnOpTextNode {
     using UnOpTextNode::UnOpTextNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 
 // upper
 struct UpperNode final : public UnOpTextNode {
     using UnOpTextNode::UnOpTextNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
 };
 
 }

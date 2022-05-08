@@ -1,6 +1,7 @@
 #ifndef H_TOKEN
 #define H_TOKEN
 #include <string>
+#include "token.hpp"
 #include "tokenType.hpp"
 #include "../table/coordinate.hpp"
 #include "../table/selection.hpp"
@@ -8,6 +9,7 @@
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 using TT = TokenType;
+
 struct Token {
     TT type;
     Token(TT t) : type(t) {}

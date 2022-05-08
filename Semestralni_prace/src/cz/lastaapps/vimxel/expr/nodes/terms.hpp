@@ -32,11 +32,12 @@ class TextTerm final : public SingleTerm {
 };
 
 class AreaTerm final : public Term {
-	const vector<shared_ptr<SingleTerm>> mValue;
+	using SSingleTerm = shared_ptr<SingleTerm>;
+	const vector<SSingleTerm> mValue;
 
    public:
-	explicit AreaTerm(vector<shared_ptr<SingleTerm>> value);
-	const vector<shared_ptr<SingleTerm>>& getValue() const;
+	explicit AreaTerm(const vector<SSingleTerm>& value);
+	const vector<SSingleTerm>& getValue() const;
 	string toString() const override;
 };
 }  // namespace cz::lastaapps::vimxel::expr

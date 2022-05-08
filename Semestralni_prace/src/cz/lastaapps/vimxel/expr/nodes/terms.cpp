@@ -21,7 +21,7 @@ string TextTerm::toString() const {
     return mValue;
 }
 
-AreaTerm::AreaTerm(vector<shared_ptr<SingleTerm>> value)
+AreaTerm::AreaTerm(const vector<shared_ptr<SingleTerm>>& value)
     : mValue(value) {}
 const vector<shared_ptr<SingleTerm>>& AreaTerm::getValue() const {
 	return mValue;

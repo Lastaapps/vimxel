@@ -8,37 +8,38 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
 
 struct BinPlusNode final : public BinOpNumNode {
     using BinOpNumNode::BinOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 struct BinMinusNode final : public BinOpNumNode {
     using BinOpNumNode::BinOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 struct BinTimesNode final : public BinOpNumNode {
     using BinOpNumNode::BinOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 struct BinDivideNode final : public BinOpNumNode {
     using BinOpNumNode::BinOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 
 struct UnPlusNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 struct UnMinusNode final : public UnOpNumNode {
     using UnOpNumNode::UnOpNumNode;
-    ST getValue() const override;
+    STerm getValue() const override;
     string getName() const override;
 };
 }

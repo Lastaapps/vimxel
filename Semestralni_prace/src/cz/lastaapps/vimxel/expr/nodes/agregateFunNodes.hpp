@@ -7,41 +7,42 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
 
 // sum
 struct SumNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
     private:
-    void addTerm(ST term, long double& sum) const;
+    void addTerm(STerm term, long double& sum) const;
 };
 // max
 struct MaxNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
     private:
-    long double getFirst(ST term) const;
-    void checkTerm(ST term, long double& max) const;
+    long double getFirst(STerm term) const;
+    void checkTerm(STerm term, long double& max) const;
 };
 // min
 struct MinNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
     private:
-    long double getFirst(ST term) const;
-    void checkTerm(ST term, long double& min) const;
+    long double getFirst(STerm term) const;
+    void checkTerm(STerm term, long double& min) const;
 };
 // avg
 struct AvgNode final : public MultiOpNumOrAreaNode {
     using MultiOpNumOrAreaNode::MultiOpNumOrAreaNode;
     string getName() const override;
-    ST getValue() const override;
+    STerm getValue() const override;
     private:
-    void addTerm(ST term, long double& sum, size_t& total) const;
+    void addTerm(STerm term, long double& sum, size_t& total) const;
 };
 }
 

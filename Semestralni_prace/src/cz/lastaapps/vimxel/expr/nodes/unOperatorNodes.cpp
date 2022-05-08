@@ -6,12 +6,12 @@ using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 
 // unary general
-UnOpNode::UnOpNode(SN child)
-: mChild(child ->getValue()) {}
+UnOpNode::UnOpNode(SNode child)
+: mChild(child ) {}
 
 // unary number operator
 shared_ptr<DoubleTerm> UnOpNumNode::casted() const {
-	auto casted = dynamic_pointer_cast<DoubleTerm>(mChild);
+	auto casted = dynamic_pointer_cast<DoubleTerm>(mChild->getValue());
 	if (casted == nullptr)
 		throw invalid_argument(getName() + ": operant in not a number");
 	return casted;
@@ -19,7 +19,7 @@ shared_ptr<DoubleTerm> UnOpNumNode::casted() const {
 
 // unary text operator
 shared_ptr<TextTerm> UnOpTextNode::casted() const {
-	auto casted = dynamic_pointer_cast<TextTerm>(mChild);
+	auto casted = dynamic_pointer_cast<TextTerm>(mChild->getValue());
 	if (casted == nullptr)
 		throw invalid_argument(getName() + ": operant in not a text");
 	return casted;

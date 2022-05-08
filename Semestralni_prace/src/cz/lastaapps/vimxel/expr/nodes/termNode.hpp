@@ -6,12 +6,14 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
-class TermNode final : Node {
-    const ST mTerm;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
+
+class TermNode final : public Node {
+    const STerm mTerm;
     public:
-    TermNode(ST term);
-    ST getValue() const override;
+    TermNode(STerm term);
+    STerm getValue() const override;
 };
 }  // namespace cz::lastaapps::vimxel::expr
 

@@ -2,10 +2,12 @@
 #define H_INSERT_PARSER
 #include "absParser.hpp"
 #include "vimState.hpp"
+#include "parserResult.hpp"
 #include "../table/coordinate.hpp"
 
 using namespace std;
 namespace cz::lastaapps::vimxel::vim {
+using Res = ParserResult;
 class InsertParser final : public AbsParser {
     private:
     string mText = "";
@@ -14,7 +16,7 @@ class InsertParser final : public AbsParser {
     VimState* mState;
     public:
     InsertParser(VimState* state);
-    ParserResult handleKey(Mode & outMode) override;
+    Res handleKey(Mode & outMode) override;
     pair<string, size_t> getTextAndPosition() override;
 
    private:

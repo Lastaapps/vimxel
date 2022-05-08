@@ -15,7 +15,9 @@
 using namespace std;
 namespace cz::lastaapps::vimxel::table {
 
-enum class ContentType {EMPTY, TEXT, ESCAPED, EXPRESSION};
+enum class CellContentType {EMPTY, TEXT, ESCAPED, EXPRESSION};
+using CT = table::CellContentType;
+
 class Table final {
    private:
 	unordered_map<Coordinates, unique_ptr<const Cell>> mMap;
@@ -42,10 +44,11 @@ class Table final {
 	void clearChanged();
 
 private:
-	void updateCellWithResult(const Coordinates& coord, ST term);
-	void updateCellAll(const Coordinates& coord, const string& content, ST term);
+	void updateCellWithResult(const Coordinates& coord, SSingleTerm term);
+	void updateCellAll(const Coordinates& coord, const string& content, SSingleTerm term);
 	void updateCellInCycle(const Coordinates& coord, bool inCycle);
 	bool isCellInCycle(const Coordinates& coord) const;
+	bool tryParseNumber(const string& src, long double& out);
 
 	void destroyOldCell(const Coordinates& coord);
 	void onTextCellUpdated(const Coordinates& coord, const string& content);
@@ -83,7 +86,7 @@ private:
 	void addDependencies(const Coordinates& coord, const set<Coordinates>& depend);
 	void removeDependencies(const Coordinates& coord);
 
-	ContentType isExpression(const string& text) const;
+	CellContentType isExpression(const string& text) const;
 
 	// --- Contracts ------------------------------------------
 	void updateContracts(const Coordinates& coord);

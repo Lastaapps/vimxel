@@ -6,34 +6,39 @@ různé druhy buňek
 - prázdná
 - s obsahem, tj. textová/číselná
 
-### Výrazy
-Výraz bude převeden na binární strom, který bude postupně vyhodnocován.
-Každý node stromu může být
-- term
+### Výrazy Výraz bude převeden na binární strom, který bude postupně
+vyhodnocován.  Každý node stromu může být
+- nosič termu
 - operátor
     ***
-    - binární operátora nebo funkce
+    - binární operátor nebo funkce
         - +, -, *, /
         - pow, sqrt, ...
     - unární operátor nebo funkce
         - +, -
         - sin, arcsin, ...
-        - e, ln, ...
+        - exp, ln, ...
         - lower, upper
     - funkce n proměnných
         - avg, sum, ...
         - concat
-*** Dělení na operátory na číslech, textech a oblastích zde pro jednoduchost vynechám.
-    Takovéto dělení mi umožní kontrolovat vstupy na 1 místě a v nodech provádět
-    pouze výpočty, nekontrolovat typ vstupů.
- 
+
+*** Dělení na operátory na číslech, textech a oblastích zde pro jednoduchost
+vynechám. Takovéto dělení mi umožní kontrolovat vstupy na 1 místě a v nodech
+provádět pouze výpočty, nekontrolovat typ vstupů.
+
+Každý node má metodu getValue(), která vypočte hodnotu za použití getValue()
+svých potomků.
+
+### Term
 Term může být
 - číslo (floating)
 - text
-- oblast termů
+- skupina termů (oblast tabulky)
 
 ### A další
 - různé druhy chyb
 - různé dekodéry vtupu z klávesnice podle Vim módu
 - nadřída drawer poskytující společné rozhraní pro vyhreslování jednotlivých částí UI
 - různé payloady tokenů při parsování výrazu buňky
+

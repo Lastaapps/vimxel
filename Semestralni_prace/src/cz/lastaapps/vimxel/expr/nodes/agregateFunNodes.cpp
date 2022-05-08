@@ -7,13 +7,13 @@ namespace cz::lastaapps::vimxel::expr {
 
 // sum
 string SumNode::getName() const { return "sum"; }
-ST SumNode::getValue() const {
+STerm SumNode::getValue() const {
 	long double sum = 0;
-	for (const auto& term : mChildren)
+	for (const auto& term : checked())
 		addTerm(term, sum);
 	return make_shared<DoubleTerm>(sum);
 }
-void SumNode::addTerm(ST term, long double& sum) const {
+void SumNode::addTerm(STerm term, long double& sum) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr) {
 		sum += castedDouble->getValue();
@@ -31,16 +31,17 @@ void SumNode::addTerm(ST term, long double& sum) const {
 
 // max
 string MaxNode::getName() const { return "max"; }
-ST MaxNode::getValue() const {
+STerm MaxNode::getValue() const {
 	if (mChildren.empty())
 		throw invalid_argument("Max of no elements is undefined");
 
-	long double max = getFirst(mChildren[0]);
-	for (const auto& term : mChildren)
+	const auto children = checked();
+	long double max = getFirst(children[0]);
+	for (const auto& term : children)
 		checkTerm(term, max);
 	return make_shared<DoubleTerm>(max);
 }
-long double MaxNode::getFirst(ST term) const {
+long double MaxNode::getFirst(STerm term) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr)
 		return castedDouble->getValue();
@@ -51,7 +52,7 @@ long double MaxNode::getFirst(ST term) const {
 
 	throw(getName() + ": max of nonnumber term");
 }
-void MaxNode::checkTerm(ST term, long double& max) const {
+void MaxNode::checkTerm(STerm term, long double& max) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr) {
 		if (castedDouble->getValue() > max)
@@ -70,16 +71,17 @@ void MaxNode::checkTerm(ST term, long double& max) const {
 
 // min
 string MinNode::getName() const { return "min"; }
-ST MinNode::getValue() const {
+STerm MinNode::getValue() const {
 	if (mChildren.empty())
 		throw invalid_argument("Min of no elements is undefined");
 
-	long double min = getFirst(mChildren[0]);
-	for (const auto& term : mChildren)
+	const auto children = checked();
+	long double min = getFirst(children[0]);
+	for (const auto& term : children)
 		checkTerm(term, min);
 	return make_shared<DoubleTerm>(min);
 }
-long double MinNode::getFirst(ST term) const {
+long double MinNode::getFirst(STerm term) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr)
 		return castedDouble->getValue();
@@ -90,7 +92,7 @@ long double MinNode::getFirst(ST term) const {
 
 	throw(getName() + ": max of nonnumber term");
 }
-void MinNode::checkTerm(ST term, long double& min) const {
+void MinNode::checkTerm(STerm term, long double& min) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr) {
 		if (castedDouble->getValue() < min)
@@ -109,10 +111,10 @@ void MinNode::checkTerm(ST term, long double& min) const {
 
 // avg
 string AvgNode::getName() const { return "avg"; }
-ST AvgNode::getValue() const {
+STerm AvgNode::getValue() const {
 	long double sum = 0;
 	size_t total = 0;
-	for (const auto& term : mChildren)
+	for (const auto& term : checked())
 		addTerm(term, sum, total);
 
 	if (total == 0)
@@ -120,7 +122,7 @@ ST AvgNode::getValue() const {
 
 	return make_shared<DoubleTerm>(sum / total);
 }
-void AvgNode::addTerm(ST term, long double& sum, size_t& total) const {
+void AvgNode::addTerm(STerm term, long double& sum, size_t& total) const {
 	auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 	if (castedDouble != nullptr) {
 		sum += castedDouble->getValue();

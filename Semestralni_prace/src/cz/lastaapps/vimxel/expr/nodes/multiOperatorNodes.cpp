@@ -1,64 +1,75 @@
 #include "multiOperatorNodes.hpp"
 
-#include <stdexcept>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 
 // general n-ary operator
-MultiOpNode::MultiOpNode(const vector<SN>& children)
-    : mChildren(map(children)) {}
-
-vector<ST> MultiOpNode::map(const vector<SN>& src) {
-	vector<ST> result;
-	auto mapper = [](const SN& st) { return st->getValue(); };
-	transform(src.begin(), src.end(), back_inserter(result), mapper);
-    return result;
+MultiOpNode::MultiOpNode(const vector<SNode>& children)
+    : mChildren(children) {}
+vector<STerm> MultiOpNode::mapped() const {
+	vector<STerm> result;
+	auto mapper = [](const SNode& st) { return st->getValue(); };
+	transform(mChildren.begin(), mChildren.end(), back_inserter(result), mapper);
+	return result;
 }
 
 // just numbers
-MultiOpNumNode::MultiOpNumNode(const vector<SN>& children)
-:MultiOpNode(children) {
-    for (const auto& term : mChildren) {
-        auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
-        if (castedDouble != nullptr) continue;
+vector<shared_ptr<DoubleTerm>> MultiOpNumNode::casted() const {
+	const auto items = mapped();
+	vector<shared_ptr<DoubleTerm>> out;
+	for (const auto& term : items) {
+		auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
+		if (castedDouble != nullptr) {
+			out.emplace_back(castedDouble);
+			continue;
+		}
 		throw invalid_argument(getName() + ": at least one arg in not a number");
 	}
+	return out;
 }
 
 // numbers or area
-MultiOpNumOrAreaNode::MultiOpNumOrAreaNode(const vector<SN>& children)
-:MultiOpNode(children) {
-    for (const auto& term : mChildren) {
-        auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
-        if (castedDouble != nullptr) continue;
-        auto castedArea = dynamic_pointer_cast<AreaTerm>(term);
-        if (castedArea != nullptr) continue;
+vector<STerm> MultiOpNumOrAreaNode::checked() const {
+	const auto items = mapped();
+	for (const auto& term : items) {
+		auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
+		if (castedDouble != nullptr) continue;
+		auto castedArea = dynamic_pointer_cast<AreaTerm>(term);
+		if (castedArea != nullptr) continue;
 		throw invalid_argument(getName() + ": at least one arg in not a number or an area");
 	}
+	return items;
 }
 
 // number or text
-MultiOpNumOrTextNode::MultiOpNumOrTextNode(const vector<SN>& children)
-:MultiOpNode(children) {
-    for (const auto& term : mChildren) {
-        auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
-        if (castedDouble != nullptr) continue;
-        auto castedText = dynamic_pointer_cast<TextTerm>(term);
-        if (castedText != nullptr) continue;
+vector<STerm> MultiOpNumOrTextNode::checked() const {
+	const auto items = mapped();
+	for (const auto& term : mChildren) {
+		auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
+		if (castedDouble != nullptr) continue;
+		auto castedText = dynamic_pointer_cast<TextTerm>(term);
+		if (castedText != nullptr) continue;
 		throw invalid_argument(getName() + ": at least one arg in not a number or a text");
 	}
+	return items;
 }
 
 // just text
-MultiOpTextNode::MultiOpTextNode(const vector<SN>& children)
-:MultiOpNode(children) {
-    for (const auto& term : mChildren) {
-        auto castedText = dynamic_pointer_cast<TextTerm>(term);
-        if (castedText != nullptr) continue;
-		throw invalid_argument(getName() + ": at least one arg in not a text");
+vector<shared_ptr<TextTerm>> MultiOpTextNode::casted() const {
+	const auto items = mapped();
+	vector<shared_ptr<TextTerm>> out;
+	for (const auto& term : items) {
+		auto castedText = dynamic_pointer_cast<TextTerm>(term);
+		if (castedText != nullptr) {
+			out.emplace_back(castedText);
+			continue;
+		}
+		throw invalid_argument(getName() + ": at least one arg in not a number");
 	}
+	return out;
 }
 
 }  // namespace cz::lastaapps::vimxel::expr

@@ -11,7 +11,6 @@ InsertParser::InsertParser(VimState* state)
     : mState(state) {}
 
 ParserResult InsertParser::handleKey(Mode& outMode) {
-	using Res = ParserResult;
 	if (checkLoad()) return Res::UPDATE;
 
 	int ch = getch();

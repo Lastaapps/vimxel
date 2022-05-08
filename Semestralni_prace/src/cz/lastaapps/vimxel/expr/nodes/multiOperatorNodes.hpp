@@ -9,32 +9,39 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
-using ST = shared_ptr<Term>;
-using SN = shared_ptr<Node>;
+using STerm = shared_ptr<Term>;
+using SNode = shared_ptr<Node>;
 
 class MultiOpNode : public OperatorNode {
-    protected:
-    const vector<ST> mChildren;
     public:
-    MultiOpNode(const vector<SN>& children);
-    private:
-    static vector<ST> map(const vector<SN>& src);
+    MultiOpNode(const vector<SNode>& children);
+    protected:
+    const vector<SNode> mChildren;
+    vector<STerm> mapped() const;
 };
 
 struct MultiOpNumNode : public MultiOpNode {
-    MultiOpNumNode(const vector<SN>& children);
+    using MultiOpNode::MultiOpNode;
+    protected:
+    vector<shared_ptr<DoubleTerm>> casted() const;
 };
 
 struct MultiOpNumOrAreaNode : public MultiOpNode {
-    MultiOpNumOrAreaNode(const vector<SN>& children);
+    using MultiOpNode::MultiOpNode;
+    protected:
+    vector<STerm> checked() const;
 };
 
 struct MultiOpNumOrTextNode : public MultiOpNode {
-    MultiOpNumOrTextNode(const vector<SN>& children);
+    using MultiOpNode::MultiOpNode;
+    protected:
+    vector<STerm> checked() const;
 };
 
 struct MultiOpTextNode : public MultiOpNode {
-    MultiOpTextNode(const vector<SN>& children);
+    using MultiOpNode::MultiOpNode;
+    protected:
+    vector<shared_ptr<TextTerm>> casted() const;
 };
 }
 

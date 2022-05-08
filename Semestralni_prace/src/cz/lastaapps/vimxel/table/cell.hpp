@@ -5,8 +5,9 @@
 using namespace std;
 
 namespace cz::lastaapps::vimxel::table {
+using STerm = shared_ptr<expr::Term>;
+using SSingleTerm = shared_ptr<expr::SingleTerm>;
 
-using ST = shared_ptr<expr::Term>;
 class Cell {
    public:
 	virtual ~Cell() {}
@@ -15,7 +16,7 @@ class Cell {
 	// value in table
 	virtual string getValue() const = 0;
 	// value for calculations
-	virtual ST getTerm() const = 0;
+	virtual SSingleTerm getTerm() const = 0;
 	// cell in in a cycle
 	virtual bool isInCycle() const = 0;
 
@@ -29,14 +30,14 @@ const static auto EMPTY_TERM = make_shared<expr::DoubleTerm>(0.0L);
 class TextCell final : public Cell {
  private:
 	string mContent;
-	ST mTerm;
+	SSingleTerm mTerm;
 	bool mInCycle;
    public:
-	TextCell(string, ST term, bool inCycle);
+	TextCell(string, SSingleTerm term, bool inCycle);
     ~TextCell() = default;
 	const string& getContent() const override;
 	string getValue() const override;
-	ST getTerm() const override;
+	SSingleTerm getTerm() const override;
 	bool isInCycle() const override;
 	virtual Cell* clone() const override;
 };
@@ -48,7 +49,7 @@ class EmptyCell final : public Cell {
     ~EmptyCell() = default;
 	const string& getContent() const override;
 	string getValue() const override;
-	ST getTerm() const override;
+	SSingleTerm getTerm() const override;
 	bool isInCycle() const override;
 	virtual Cell* clone() const override;
 };
