@@ -1,5 +1,5 @@
-#ifndef H_AGREGATE_NODE
-#define H_AGREGATE_NODE
+#ifndef H_TEXT_MANIP_NODE
+#define H_TEXT_MANIP_NODE
 #include <memory>
 #include "node.hpp"
 #include "terms.hpp"

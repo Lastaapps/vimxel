@@ -1,13 +1,15 @@
 #include "unOperatorNodes.hpp"
-#include <stdexcept>
 
+#include <stdexcept>
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 
 // unary general
 UnOpNode::UnOpNode(SNode child)
-: mChild(child ) {}
+    : mChild(child) {}
+UnOpNode::UnOpNode(const vector<SNode>& args)
+    : mChild(args[0]) {}
 
 // unary number operator
 shared_ptr<DoubleTerm> UnOpNumNode::casted() const {
@@ -25,4 +27,4 @@ shared_ptr<TextTerm> UnOpTextNode::casted() const {
 	return casted;
 }
 
-}  
+}  // namespace cz::lastaapps::vimxel::expr

@@ -106,7 +106,13 @@ bool Tokenizer::parseNumber(SToken& out) {
 	if (mPos != mString.end()) {
 		if (*mPos++ == '.') {
 			long double pow = 1;
-			while (mPos != mString.end() && isdigit(c = *mPos++)) {
+			while (true) {
+				if (mPos == mString.end())
+				break;
+				if (!isdigit(c = *mPos++)) {
+					--mPos;
+					break;
+				}
 				pow *= 10;
 				num += (c - '0') / pow;
 			}

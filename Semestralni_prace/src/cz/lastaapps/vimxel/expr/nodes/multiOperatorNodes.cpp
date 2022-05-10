@@ -9,6 +9,7 @@ namespace cz::lastaapps::vimxel::expr {
 // general n-ary operator
 MultiOpNode::MultiOpNode(const vector<SNode>& children)
     : mChildren(children) {}
+
 vector<STerm> MultiOpNode::mapped() const {
 	vector<STerm> result;
 	auto mapper = [](const SNode& st) { return st->getValue(); };
@@ -47,7 +48,7 @@ vector<STerm> MultiOpNumOrAreaNode::checked() const {
 // number or text
 vector<STerm> MultiOpNumOrTextNode::checked() const {
 	const auto items = mapped();
-	for (const auto& term : mChildren) {
+	for (const auto& term : items) {
 		auto castedDouble = dynamic_pointer_cast<DoubleTerm>(term);
 		if (castedDouble != nullptr) continue;
 		auto castedText = dynamic_pointer_cast<TextTerm>(term);

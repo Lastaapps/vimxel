@@ -16,6 +16,7 @@ class UnOpNode : public OperatorNode {
     const SNode mChild;
     public:
     UnOpNode(SNode child);
+    UnOpNode(const vector<SNode>& args);
 };
 
 struct UnOpNumNode : public UnOpNode {

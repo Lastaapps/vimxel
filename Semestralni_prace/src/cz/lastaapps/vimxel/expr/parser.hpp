@@ -52,6 +52,11 @@ class Parser final {
     bool evFTerms(SNode&);
     bool evFConstants(SNode&);
     bool evFOperators(SNode&);
+    bool evFBrackets(SNode&);
+    bool evFFunctions(SNode&);
+    template<TT type, size_t size, typename Name>
+    bool evFFunctionsCheck(SNode&);
+    pair<bool, vector<SNode>> evFFunctionsOperands(const TT type);
 };
 } // namespace cz::lastaapps::vimxel::exptr
 

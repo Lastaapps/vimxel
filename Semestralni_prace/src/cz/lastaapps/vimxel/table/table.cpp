@@ -1,6 +1,7 @@
 #include "table.hpp"
 
 #include <cmath>
+
 #include "../expr/parser.hpp"
 #include "../expr/tokenizer.hpp"
 #include "../log.hpp"
@@ -148,6 +149,11 @@ bool Table::tryParseNumber(const string& content, long double& out) {
 	char c;
 	auto mPos = noSpaces.begin();
 	long double num = 0;
+	bool isMinus = false;
+	if (*mPos == '-') {
+		isMinus = true;
+		++mPos;
+	}
 	while (true) {
 		if (mPos == noSpaces.end()) break;
 		if (!isdigit(c = *mPos++)) {
@@ -160,7 +166,13 @@ bool Table::tryParseNumber(const string& content, long double& out) {
 	if (mPos != noSpaces.end()) {
 		if (*mPos++ == '.') {
 			long double pow = 1;
-			while (mPos != noSpaces.end() && isdigit(c = *mPos++)) {
+			while (true) {
+				if (mPos == noSpaces.end())
+					break;
+				if (!isdigit(c = *mPos++)) {
+					--mPos;
+					break;
+				}
 				pow *= 10;
 				num += (c - '0') / pow;
 			}
@@ -169,7 +181,7 @@ bool Table::tryParseNumber(const string& content, long double& out) {
 	}
 	if (mPos != noSpaces.end())
 		return false;
-	out = num;
+	out = isMinus ? -1 * num : num;
 	return true;
 }
 void Table::destroyOldCell(const Coordinates& coord) {

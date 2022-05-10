@@ -16,6 +16,7 @@ class BinOpNode : public OperatorNode {
     const SNode mLeft, mRight;
     public:
     BinOpNode(SNode left, SNode right);
+    BinOpNode(const vector<SNode>& args);
 };
 
 struct BinOpNumNode : public BinOpNode {

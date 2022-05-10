@@ -8,6 +8,8 @@ namespace cz::lastaapps::vimxel::expr {
 // binary general
 BinOpNode::BinOpNode(SNode left, SNode right)
     : mLeft(left), mRight(right) {}
+BinOpNode::BinOpNode(const vector<SNode>& args)
+    : mLeft(args[0]), mRight(args[1]) {}
 
 // binary number only
 shared_ptr<DoubleTerm> BinOpNumNode::castedLeft() const {
