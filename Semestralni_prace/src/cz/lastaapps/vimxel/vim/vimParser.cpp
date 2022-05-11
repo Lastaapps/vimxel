@@ -28,6 +28,7 @@ ParserResult VimParser::handleKeyBoard() {
 		unknowsInfo();
 		break;
 	case ParserResult::UPDATE:
+	case ParserResult::ERROR:
 		updateInfo();
 		break;
 	default:
@@ -42,6 +43,15 @@ shared_ptr<VimContract> VimParser::createContract() {
 	updateInfo();
 	return newCnt;
 }
+
+void VimParser::passExternalError(const string& message) {
+	if (mMode != Mode::ERROR)
+		mState.mReturnMode = mMode;
+	mState.mErrorMsg = message;
+	mMode = Mode::ERROR;
+	updateInfo();
+}
+
 void VimParser::notifyContracts(const VimInfo& info) {
 	for (auto itr = mContracts.begin(); itr != mContracts.end(); itr++) {
 		if (itr->use_count() == 1)

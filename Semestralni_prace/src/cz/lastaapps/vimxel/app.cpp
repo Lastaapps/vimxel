@@ -1,33 +1,40 @@
 #include "app.hpp"
-#include "log.hpp"
-#include "table/cell.hpp"
-#include "display/state.hpp"
-#include "display/display.hpp"
-#include "storage/storage.hpp"
-#include "vim/vimParser.hpp"
+
 #include <thread>
 
+#include "display/display.hpp"
+#include "display/state.hpp"
+#include "log.hpp"
+#include "storage/storage.hpp"
+#include "table/cell.hpp"
+#include "vim/vimParser.hpp"
+
 namespace cz::lastaapps::vimxel {
+
 int App::run(vector<string> args) {
 	log("App started");
 	printArgs(args);
 	string filename = args.size() >= 2 ? args[1] : "";
 	initNCurses();
-    try {
+	try {
 		log("Loading data");
-		shared_ptr<table::Table> table = loadTable(filename);
+		auto loaded = loadTable(filename);
+		shared_ptr<table::Table> table = loaded.table;
 		shared_ptr<table::CellContract> cellContract = table->createCellContract();
 		shared_ptr<display::State> dState = make_shared<display::State>();
 
 		log("Staring parser");
 		vim::VimParser vim(dState, table, filename);
+		if (!loaded.success)
+			vim.passExternalError(loaded.message);
 		shared_ptr<vim::VimContract> vimContract = vim.createContract();
 
 		log("Setting up display");
 		display::Display display(dState, cellContract, vimContract);
 
-		while(true) {
+		while (true) {
 			if (checkWindowSize()) {
+				log("New terminal size");
 				display.recreate();
 				display.draw();
 			}
@@ -55,7 +62,7 @@ int App::run(vector<string> args) {
 	return 0;
 }
 
-void App::printArgs(const vector<string> &args) {
+void App::printArgs(const vector<string>& args) {
 	mlog << "App args: ";
 	bool isFirst = true;
 	for (const auto& arg : args) {
@@ -68,11 +75,16 @@ void App::printArgs(const vector<string> &args) {
 	mlog << endl;
 }
 
-shared_ptr<table::Table> App::loadTable(const string &filename) {
-    auto table = shared_ptr<table::Table>(new table::Table);
-	if (!filename.empty())
-		storage::Storage::loadData(filename, table);
-	return table;
+FileLoadResult App::loadTable(const string& filename) {
+	auto table = shared_ptr<table::Table>(new table::Table);
+	try {
+		if (!filename.empty())
+			storage::Storage::loadData(table, filename);
+		return {table, true, ""};
+	} catch (exception& e) {
+		log("Filed to load file "s + filename + " - " + e.what());
+		return {table, false, "Malformed file: "s + e.what()};
+	}
 }
 
 void App::initNCurses() {

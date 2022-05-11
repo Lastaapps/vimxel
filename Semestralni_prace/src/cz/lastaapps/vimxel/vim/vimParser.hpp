@@ -45,6 +45,7 @@ class VimParser final {
 	ParserResult handleKeyBoard();
 
 	shared_ptr<VimContract> createContract();
+	void passExternalError(const string& message);
 
    private:
 	AbsParser& getParser();
@@ -53,7 +54,6 @@ class VimParser final {
 	void notifyContracts(const VimInfo& info);
 	void updateInfo();
 	void unknowsInfo();
-	void errorInfo();
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

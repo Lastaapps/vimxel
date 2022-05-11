@@ -8,18 +8,22 @@ namespace cz::lastaapps::vimxel::vim {
 using Res = vim::ParserResult;
 
 class CommandParser final : public AbsParser {
-    private:
-    string mCommand = "";
-    VimState* mState;
-    public:
-    CommandParser(VimState* state);
-    ParserResult handleKey(Mode & outMode) override;
-    pair<string, size_t> getTextAndPosition() override;
-    private:
-    ParserResult handleCommand(Mode& outMode);
-    ParserResult tryQuitAndWrite(Mode& outMode);
-    ParserResult tryJump(Mode& outMode);
+   private:
+	string mCommand = "";
+	VimState* mState;
+
+   public:
+	CommandParser(VimState* state);
+	ParserResult handleKey(Mode& outMode) override;
+	pair<string, size_t> getTextAndPosition() override;
+
+   private:
+	Res handleCommand(Mode& outMode);
+	Res tryQuitAndWrite(Mode& outMode);
+	Res tryOpenFile(Mode& outMode);
+	Res tryExportFile(Mode& outMode);
+	Res tryJump(Mode& outMode);
 };
-}
+}  // namespace cz::lastaapps::vimxel::vim
 
 #endif

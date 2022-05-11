@@ -1,16 +1,12 @@
 #include "storage.hpp"
 
-#include <filesystem>
-#include <ios>
-#include <sstream>
-
 #include "../log.hpp"
 #include "../table/coordinate.hpp"
 #include "../table/table.hpp"
 
 namespace cz::lastaapps::vimxel::storage {
 
-void Storage::saveData(shared_ptr<table::Table> table, const string& path) {
+void Storage::saveData(shared_ptr<table::Table> table, const fs::path& path) {
 	auto size = table->tableSize();
 	ofstream file;
 	openFileForWrite(path, file);
@@ -28,13 +24,12 @@ void Storage::saveData(shared_ptr<table::Table> table, const string& path) {
 	}
 	// drop latests \n
 	file.close();
-	auto filePath = filesystem::path(path);
-	size_t fileSize = file_size(filePath);
+	size_t fileSize = fs::file_size(path);
 	if (fileSize != 0)
-		resize_file(filePath, fileSize - 1);
+		fs::resize_file(path, fileSize - 1);
 }
 
-void Storage::exportData(shared_ptr<table::Table> table, const string& path) {
+void Storage::exportData(shared_ptr<table::Table> table, const fs::path& path) {
 	auto size = table->tableSize();
 	ofstream file;
 	openFileForWrite(path, file);
@@ -52,25 +47,29 @@ void Storage::exportData(shared_ptr<table::Table> table, const string& path) {
 	}
 	// drop latests \n
 	file.close();
-	auto filePath = filesystem::path(path);
-	size_t fileSize = file_size(filePath);
+	size_t fileSize = fs::file_size(path);
 	if (fileSize != 0)
-		resize_file(filePath, fileSize - 1);
+		fs::resize_file(path, fileSize - 1);
 }
 
-void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
-	ifstream file;
-	openFileForRead(path, file);
-	for (size_t y = 0; file; y++) {
-		for (size_t x = 0; file; x++) {
-			bool lineEnd;
-			string cellContent = move(importText(file, lineEnd));
-			auto insertRes = table->updateCell(table::Coordinates(x, y), cellContent);
-			if (!insertRes.success) throw invalid_argument("Cannot open file: "s + insertRes.message);
-			if (lineEnd) break;
+void Storage::loadData(shared_ptr<table::Table>& table, const fs::path& path) {
+	try {
+		ifstream file;
+		openFileForRead(path, file);
+		for (size_t y = 0; file; y++) {
+			for (size_t x = 0; file; x++) {
+				bool lineEnd;
+				string cellContent = move(importText(file, lineEnd));
+				auto insertRes = table->updateCell(table::Coordinates(x, y), cellContent);
+				if (!insertRes.success) throw invalid_argument("Cannot open file: "s + insertRes.message);
+				if (lineEnd) break;
+			}
 		}
+		table->clearChanged();
+	} catch (exception& e) {
+		table->deleteAll();
+		throw e;
 	}
-	table -> clearChanged();
 }
 
 string Storage::escapeText(const string& str) {
@@ -141,10 +140,12 @@ string Storage::importText(istream& stream, bool& lineEnd) {
 	return out.str();
 }
 
-void Storage::openFileForWrite(const string& str, ofstream& stream) {
+void Storage::openFileForWrite(const fs::path& str, ofstream& stream) {
 	stream = ofstream(str, ios::out | ios::trunc);
 }
-void Storage::openFileForRead(const string& str, ifstream& stream) {
+void Storage::openFileForRead(const fs::path& str, ifstream& stream) {
+	if (!fs::exists(fs::path(str)))
+		throw invalid_argument("File does not exists");
 	stream = ifstream(str, ios::in);
 }
 }  // namespace cz::lastaapps::vimxel::storage

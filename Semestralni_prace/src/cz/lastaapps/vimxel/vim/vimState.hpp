@@ -1,17 +1,21 @@
 #ifndef H_VIM_STATE
 #define H_VIM_STATE
+#include <filesystem>
 #include <memory>
 
-#include "mode.hpp"
 #include "../display/state.hpp"
 #include "../table/table.hpp"
+#include "mode.hpp"
+#include "parserResult.hpp"
 
 using namespace std;
+namespace fs = std::filesystem;
+
 namespace cz::lastaapps::vimxel::vim {
 struct VimState {
 	shared_ptr<display::State> mDisplayState;
 	shared_ptr<table::Table> mTable;
-	string mFilename;
+	fs::path mFilename;
 
 	table::Coordinates mPos;
 	table::Coordinates mViewPort;
@@ -21,7 +25,9 @@ struct VimState {
 	VimState(
 	    shared_ptr<display::State> displayState,
 	    shared_ptr<table::Table> table,
-	    const string& filename);
+	    const fs::path& filename);
+
+	ParserResult setError(const string& message, const Mode next, Mode& outMode);
 };
 }  // namespace cz::lastaapps::vimxel::vim
 

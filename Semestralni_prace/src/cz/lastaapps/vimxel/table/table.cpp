@@ -19,6 +19,19 @@ const Cell& Table::getCell(const Coordinates& coord) const {
 void Table::deleteCell(const Coordinates& coord) {
 	mMap.erase(coord);
 }
+void Table::deleteAll() {
+	vector<Coordinates> coords;
+	for (const auto& item : mMap)
+		coords.emplace_back(item.first);
+
+	mChanged = false;
+	mMap.clear();
+	mDependencies.clear();
+	mDependenciesInversed.clear();
+
+	for (const auto& item : coords)
+		updateContracts(item);
+}
 
 shared_ptr<CellContract> Table::createCellContract() {
 	class TableCellContract final : public CellContract {
@@ -93,43 +106,42 @@ TableUpdateResult Table::updateCell(const Coordinates& coord, const string& cont
 	destroyOldCell(coord);
 
 	try {
-	switch (isExpression(content)) {
-	case CT::EMPTY: {
-		deleteCell(coord);
-		onTextCellUpdated(coord, content);
-		break;
-	}
-	case CT::TEXT: {
-		long double numberValue;
-		if (tryParseNumber(content, numberValue))
-			updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
-		else
-			updateCellAll(coord, content, make_shared<expr::TextTerm>(content));
-		onTextCellUpdated(coord, content);
-		break;
-	}
-	case CT::ESCAPED: {
-		const string dropFirst = string(content.begin() + 1, content.end());
-		long double numberValue;
-		if (tryParseNumber(dropFirst, numberValue))
-			updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
-		else
-			updateCellAll(coord, content, make_shared<expr::TextTerm>(dropFirst));
-		onTextCellUpdated(coord, content);
-		break;
-	}
-	case CT::EXPRESSION: {
-		updateCellAll(coord, content, make_shared<expr::DoubleTerm>(0.0L));
-		onExpressionCellUpdated(coord, content);
-		break;
-	}
-	default:
-		throw runtime_error("Unknown content type");
-	}
-	mChanged = true;
-	return TableUpdateResult{true, ""};
-	}
-	catch (exception& e) {
+		switch (isExpression(content)) {
+		case CT::EMPTY: {
+			deleteCell(coord);
+			onTextCellUpdated(coord, content);
+			break;
+		}
+		case CT::TEXT: {
+			long double numberValue;
+			if (tryParseNumber(content, numberValue))
+				updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
+			else
+				updateCellAll(coord, content, make_shared<expr::TextTerm>(content));
+			onTextCellUpdated(coord, content);
+			break;
+		}
+		case CT::ESCAPED: {
+			const string dropFirst = string(content.begin() + 1, content.end());
+			long double numberValue;
+			if (tryParseNumber(dropFirst, numberValue))
+				updateCellAll(coord, content, make_shared<expr::DoubleTerm>(numberValue));
+			else
+				updateCellAll(coord, content, make_shared<expr::TextTerm>(dropFirst));
+			onTextCellUpdated(coord, content);
+			break;
+		}
+		case CT::EXPRESSION: {
+			updateCellAll(coord, content, make_shared<expr::DoubleTerm>(0.0L));
+			onExpressionCellUpdated(coord, content);
+			break;
+		}
+		default:
+			throw runtime_error("Unknown content type");
+		}
+		mChanged = true;
+		return TableUpdateResult{true, ""};
+	} catch (exception& e) {
 		updateCell(coord, oldContent);
 		return TableUpdateResult{false, e.what()};
 	}

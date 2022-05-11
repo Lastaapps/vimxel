@@ -1,22 +1,29 @@
 #ifndef H_TABLE
 #define H_TABLE
 #include <algorithm>
-#include <memory>
 #include <map>
-#include <unordered_map>
-#include <set>
+#include <memory>
 #include <queue>
-#include <unordered_set>
+#include <set>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "cell.hpp"
-#include "coordinate.hpp"
 #include "cellContract.hpp"
+#include "coordinate.hpp"
 using namespace std;
 namespace cz::lastaapps::vimxel::table {
 
-enum class CellContentType {EMPTY, TEXT, ESCAPED, EXPRESSION};
+enum class CellContentType {
+	EMPTY,
+	TEXT,
+	ESCAPED,
+	EXPRESSION,
+};
+
 using CT = table::CellContentType;
+
 struct TableUpdateResult {
 	bool success = false;
 	string message;
@@ -37,7 +44,7 @@ class Table final {
 	Table& operator=(const Table& other) = delete;
 	const Cell& getCell(const Coordinates& coord) const;
 	TableUpdateResult updateCell(const Coordinates& coord, const string& content);
-	void deleteCell(const Coordinates& coord);
+	void deleteAll();
 
 	shared_ptr<CellContract> createCellContract();
 
@@ -47,7 +54,9 @@ class Table final {
 	bool changed() const;
 	void clearChanged();
 
-private:
+   private:
+	void deleteCell(const Coordinates& coord);
+
 	void updateCellWithResult(const Coordinates& coord, SSingleTerm term);
 	void updateCellAll(const Coordinates& coord, const string& content, SSingleTerm term);
 	void updateCellInCycle(const Coordinates& coord, bool inCycle);
@@ -66,7 +75,7 @@ private:
 	struct ExecutionItem {
 		size_t size;
 		Coordinates coord;
-		bool operator <(const ExecutionItem& other) const;
+		bool operator<(const ExecutionItem& other) const;
 	};
 	using ExecutionPlan = priority_queue<ExecutionItem>;
 	using OrderMap = unordered_map<Coordinates, size_t>;
@@ -79,7 +88,7 @@ private:
 	};
 	void createExecutionPlan(const Coordinates& coord, ExecutionPlan& order, CycleRootsSet& cycleRoots) const;
 	void createExecutionPlanRecursive(
-		 const Coordinates& coord, ExecutionArgs& args ,size_t depth) const;
+	    const Coordinates& coord, ExecutionArgs& args, size_t depth) const;
 
 	// evaluation
 	void evaluate(ExecutionPlan& plan, const CycleRootsSet& cycleRoots);
