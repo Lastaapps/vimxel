@@ -1,19 +1,18 @@
 #include "contentDrawer.hpp"
 
-
 namespace cz::lastaapps::vimxel::display {
 
 ContentDrawer::ContentDrawer(
     WINDOW* w,
     const size_t colW, const size_t rowH,
     shared_ptr<CellContract> ptr)
-    : Drawer(w), mColWidth(colW), mRowHeight(rowH), mCntr(ptr) { init(); }
+    : PosDrawer(w), mColWidth(colW), mRowHeight(rowH), mCntr(ptr) { init(); }
 
 ContentDrawer::ContentDrawer(
     WINDOW* w,
     const size_t colW, const size_t rowH,
     table::Coordinates pos, table::Coordinates viewPort, shared_ptr<CellContract> ptr)
-    : Drawer(w, pos, viewPort), mColWidth(colW), mRowHeight(rowH), mCntr(ptr) { init(); }
+    : PosDrawer(w, pos, viewPort), mColWidth(colW), mRowHeight(rowH), mCntr(ptr) { init(); }
 
 ContentDrawer::~ContentDrawer() {
 	mCntr->unregisterCallback();
@@ -56,7 +55,7 @@ void ContentDrawer::renderItem(const Coordinates& coord) {
 	const string content = mCntr->getDataAt(coord);
 	const bool selected = isSelected(coord);
 	if (selected) wattron(mWin, A_STANDOUT);
-	mvwprintw(mWin, point.y(), point.x(), "%*.*s", (int)mColWidth, (int)mColWidth, content.c_str());
+	mvwprintw(mWin, point.y(), point.x(), "%*.*s", static_cast<int>(mColWidth), static_cast<int>(mColWidth), content.c_str());
 	wattroff(mWin, A_STANDOUT);
 }
 bool ContentDrawer::isSelected(const Coordinates& coord) {

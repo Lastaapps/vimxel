@@ -1,5 +1,5 @@
-#ifndef COORDINATE_H
-#define COORDINATE_H
+#ifndef H_COORDINATE
+#define H_COORDINATE
 #include <string>
 #include <iostream>
 #include <functional>

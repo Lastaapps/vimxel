@@ -1,5 +1,5 @@
-#ifndef CELL_CONTRACT_H
-#define CELL_CONTRACT_H
+#ifndef H_CELL_CONTRACT
+#define H_CELL_CONTRACT
 #include "coordinate.hpp"
 #include <functional>
 #include <list>

@@ -6,6 +6,7 @@
 using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
+
 RowDrawer::RowDrawer(WINDOW* w)
     : BoxDrawer(w) {}
 RowDrawer::RowDrawer(WINDOW* w, table::Coordinates pos, table::Coordinates viewPort)

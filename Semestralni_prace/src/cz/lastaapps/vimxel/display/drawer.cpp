@@ -9,11 +9,13 @@ using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
 Drawer::Drawer(WINDOW* w)
     : mWin(w), mWinSize(getWindowSize(w)) {}
-Drawer::Drawer(WINDOW* w, table::Coordinates pos, table::Coordinates viewPort)
-    : mWin(w), mWinSize(getWindowSize(w)), mPos(pos), mViewPort(viewPort) {}
-Drawer::~Drawer() = default;
 
-void Drawer::selectPos(
+PosDrawer::PosDrawer(WINDOW* w)
+    : Drawer(w) {}
+PosDrawer::PosDrawer(WINDOW* w, table::Coordinates pos, table::Coordinates viewPort)
+    : Drawer(w), mPos(pos), mViewPort(viewPort) {}
+
+void PosDrawer::selectPos(
     const table::Coordinates& pos,
     const table::Coordinates& viewPort) {
 	mPos = pos;
@@ -21,9 +23,9 @@ void Drawer::selectPos(
 	draw();
 }
 
-BoxDrawer::BoxDrawer(WINDOW* w) : Drawer(w) {}
+BoxDrawer::BoxDrawer(WINDOW* w) : PosDrawer(w) {}
 BoxDrawer::BoxDrawer(WINDOW* w, table::Coordinates pos, table::Coordinates viewPort)
-    : Drawer(w, pos, viewPort) {}
+    : PosDrawer(w, pos, viewPort) {}
 void BoxDrawer::selectPos(
     const table::Coordinates& pos,
     const table::Coordinates& viewPort) {

@@ -16,15 +16,15 @@ void VimDrawer::updateInfo(const vim::VimInfo& info) {
 }
 
 void VimDrawer::draw() {
-	mvwprintw(mWin, 0, 0, "%*s", (int)mWinSize.x(), "");
+	mvwprintw(mWin, 0, 0, "%*s", static_cast<int>(mWinSize.x()), "");
 	if (!mInfo.text.empty()) {
-		mvwprintw(mWin, 0, 0, "%.*s", (int)mWinSize.x(), mInfo.text.c_str());
+		mvwprintw(mWin, 0, 0, "%.*s", static_cast<int>(mWinSize.x()), mInfo.text.c_str());
 		if (mInfo.cursorPos != (size_t)-1) {
 			wattron(mWin, A_STANDOUT);
 			if (mInfo.cursorPos < mInfo.text.length())
-				mvwaddch(mWin, 0, (int)(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
+				mvwaddch(mWin, 0, static_cast<int>(mInfo.cursorPos), mInfo.text.at(mInfo.cursorPos));
 			else
-				mvwaddch(mWin, 0, (int)(mInfo.cursorPos), ' ');
+				mvwaddch(mWin, 0, static_cast<int>(mInfo.cursorPos), ' ');
 			wattroff(mWin, A_STANDOUT);
 		}
 	}
@@ -36,9 +36,5 @@ void VimDrawer::draw() {
 		wattroff(mWin, A_STANDOUT);
 	}
 	wrefresh(mWin);
-}
-
-void VimDrawer::selectPos(const table::Coordinates&, const table::Coordinates&) {
-	throw runtime_error("VimDrawer::seletPos not supported");
 }
 }  // namespace cz::lastaapps::vimxel::display

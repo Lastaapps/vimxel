@@ -1,5 +1,5 @@
-#ifndef TABLE_H
-#define TABLE_H
+#ifndef H_TABLE
+#define H_TABLE
 #include <algorithm>
 #include <memory>
 #include <map>

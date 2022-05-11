@@ -8,16 +8,16 @@ using namespace std;
 using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::display {
 
-Display::Display( shared_ptr<State> state,
-shared_ptr<CellContract> contract,
-		shared_ptr<vim::VimContract> vimContract)
-: mState(state), mCellContract(contract), mVimContract(vimContract) {
+Display::Display(shared_ptr<State> state,
+                 shared_ptr<CellContract> contract,
+                 shared_ptr<vim::VimContract> vimContract)
+    : mState(state), mCellContract(contract), mVimContract(vimContract) {
 	// initial refresh
 	refresh();
 	updateDisplayConfig();
 
 	mStateCallback = shared_ptr<StateCallback>(new DisplayStateCallback(this));
-	mState -> registerCallback(mStateCallback);
+	mState->registerCallback(mStateCallback);
 }
 
 Display::~Display() {
@@ -35,12 +35,12 @@ void Display::DisplayStateCallback::onUpdateViewPort(const table::Coordinates& c
 }
 
 void Display::delWindows() {
-	delete posDrawer;
+	delete headerDrawer;
 	delete rowDrawer;
 	delete colDrawer;
 	delete contentDrawer;
 	delete vimDrawer;
-	posDrawer = nullptr;
+	headerDrawer = nullptr;
 	rowDrawer = nullptr;
 	colDrawer = nullptr;
 	contentDrawer = nullptr;
@@ -71,7 +71,7 @@ void Display::updateDisplayConfig() {
 	    colNamesHeight + 1, rowNamesWidth + 1);
 	posWin = newwin(1, rowNamesWidth, 0, 0);
 
-	posDrawer = new PosDrawer(posWin, mPos, mViewPort);
+	headerDrawer = new HeaderDrawer(posWin);
 	rowDrawer = new RowDrawer(rowNamesWin, mPos, mViewPort);
 	colDrawer = new ColDrawer(colNamesWin, cellWidth, mPos, mViewPort);
 	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mCellContract);
@@ -83,7 +83,7 @@ void Display::recreate() {
 }
 void Display::draw() {
 	drawSeparatingLines();
-	posDrawer->draw();
+	headerDrawer->draw();
 	rowDrawer->draw();
 	colDrawer->draw();
 	contentDrawer->draw();
@@ -107,7 +107,7 @@ void Display::updateViewPort() {
 	}
 
 	if (mViewPort != original)
-		mState -> setViewPort(mViewPort);
+		mState->setViewPort(mViewPort);
 }
 
 table::Coordinates Display::getTerminalSize() {
@@ -125,7 +125,6 @@ void Display::drawSeparatingLines() {
 	move(0, 0);
 }
 void Display::refreshWindows() {
-	posDrawer->selectPos(mPos, mViewPort);
 	rowDrawer->selectPos(mPos, mViewPort);
 	colDrawer->selectPos(mPos, mViewPort);
 	contentDrawer->selectPos(mPos, mViewPort);

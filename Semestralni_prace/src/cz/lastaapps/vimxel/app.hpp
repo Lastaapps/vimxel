@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#ifndef H_APP
+#define H_APP
 #include <ncurses.h>
 
 #include <string>

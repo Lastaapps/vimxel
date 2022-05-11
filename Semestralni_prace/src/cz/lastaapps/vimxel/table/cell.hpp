@@ -1,5 +1,5 @@
-#ifndef CELL_H
-#define CELL_H
+#ifndef H_CELL
+#define H_CELL
 #include <string>
 #include "../expr/nodes/terms.hpp"
 using namespace std;
