@@ -16,6 +16,7 @@ struct VimState {
 	shared_ptr<display::State> mDisplayState;
 	shared_ptr<table::Table> mTable;
 	fs::path mFilename;
+	string mClipboard;
 
 	table::Coordinates mPos;
 	table::Coordinates mViewPort;
