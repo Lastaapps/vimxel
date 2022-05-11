@@ -1,4 +1,4 @@
-#include "agregateFunNodes.hpp"
+#include "aggregateFunNodes.hpp"
 
 #include <stdexcept>
 

@@ -6,7 +6,7 @@
 #include "tokenizer.hpp"
 #include "../table/coordinate.hpp"
 
-#include "nodes/agregateFunNodes.hpp"
+#include "nodes/aggregateFunNodes.hpp"
 #include "nodes/constantNodes.hpp"
 #include "nodes/goniometryNodes.hpp"
 #include "nodes/mathFunNodes.hpp"
