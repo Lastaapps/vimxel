@@ -2,6 +2,7 @@
 #define H_VIM_STATE
 #include <memory>
 
+#include "mode.hpp"
 #include "../display/state.hpp"
 #include "../table/table.hpp"
 
@@ -15,6 +16,7 @@ struct VimState {
 	table::Coordinates mPos;
 	table::Coordinates mViewPort;
 	string mErrorMsg;
+	Mode mReturnMode;
 
 	VimState(
 	    shared_ptr<display::State> displayState,

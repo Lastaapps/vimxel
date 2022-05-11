@@ -12,6 +12,8 @@ string to_string(Mode m) {
 		return "INSERT";
 	case Mode::COMMAND:
 		return "COMMAND";
+	case Mode::ERROR:
+		return "ERROR";
 	}
 	throw invalid_argument("Unknown Vim Mode");
 }

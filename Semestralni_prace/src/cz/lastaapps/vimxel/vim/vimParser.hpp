@@ -9,6 +9,7 @@
 #include "normalParser.hpp"
 #include "insertParser.hpp"
 #include "commandParser.hpp"
+#include "errorParser.hpp"
 #include "vimContract.hpp"
 #include "parserResult.hpp"
 #include "vimState.hpp"
@@ -27,6 +28,7 @@ class VimParser final {
 	NormalParser normalParser = NormalParser(&mState);
 	InsertParser insertParser = InsertParser(&mState);
 	CommandParser commandParser = CommandParser(&mState);
+	ErrorParser errorParser = ErrorParser(&mState);
 
 	struct VimStateCallback final : public display::StateCallback {
 		VimParser* mParent;

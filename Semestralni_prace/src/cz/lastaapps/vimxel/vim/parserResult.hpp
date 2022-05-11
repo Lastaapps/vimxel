@@ -4,7 +4,6 @@
 namespace cz::lastaapps::vimxel::vim {
 enum class ParserResult {
     UNKNOWN,
-    ERROR,
     NOPE,
     UPDATE,
     ACCEPTED,

@@ -24,9 +24,13 @@ ParserResult CommandParser::handleKey(Mode& outMode) {
 	}
 	case KEY_ENTER:
 	case '\n': {  // ENTER
-		Res res = handleCommand();
-		mCommand = "";
-		outMode = Mode::NORMAL;
+		Res res = handleCommand(outMode);
+		if (res != Res::UNKNOWN) {
+			mCommand = "";
+			outMode = Mode::NORMAL;
+		} else if (mCommand == "")
+			outMode = Mode::NORMAL;
+
 		return res;
 	}
 	case KEY_BACKSPACE: {
@@ -42,33 +46,39 @@ ParserResult CommandParser::handleKey(Mode& outMode) {
 	return Res::NOPE;
 }
 
-ParserResult CommandParser::handleCommand() {
+ParserResult CommandParser::handleCommand(Mode& outMode) {
 	trim(mCommand);
 	if (mCommand.empty()) return ParserResult::NOPE;
 
 	{
-		auto res = tryQuitAndWrite();
+		auto res = tryQuitAndWrite(outMode);
 		if (res != ParserResult::UNKNOWN) return res;
 	}
 	{
-		auto res = tryJump();
+		auto res = tryJump(outMode);
 		if (res != ParserResult::UNKNOWN) return res;
 	}
 	return ParserResult::UNKNOWN;
 }
-ParserResult CommandParser::tryQuitAndWrite() {
-	mState->mErrorMsg = "No filename specified";
+ParserResult CommandParser::tryQuitAndWrite(Mode& outMode) {
 	if (mCommand == "q") {
 		if (mState->mTable->changed()) {
 			mState->mErrorMsg = "You have unsaved changes";
-			return ParserResult::ERROR;
+			mState->mReturnMode = Mode::COMMAND;
+			outMode = Mode::ERROR;
+			return ParserResult::UPDATE;
 		} else {
 			return ParserResult::QUIT;
 		}
 	}
 	if (mCommand == "q!") return ParserResult::QUIT;
 	if (mCommand == "wq" || mCommand == "w") {
-		if (mState->mFilename.empty()) return ParserResult::ERROR;
+		if (mState->mFilename.empty()){
+			mState->mErrorMsg = "No filename specified";
+			mState->mReturnMode = Mode::COMMAND;
+			outMode = Mode::ERROR;
+			return ParserResult::UPDATE;
+		}
 		storage::Storage::saveData(mState->mTable, mState->mFilename);
 		mState->mTable->clearChanged();
 		if (mCommand == "w")
@@ -87,15 +97,18 @@ ParserResult CommandParser::tryQuitAndWrite() {
 		storage::Storage::saveData(mState->mTable, filename);
 		return true;
 	};
+
+	mState->mErrorMsg = "No filename specified";
+	mState->mReturnMode = Mode::COMMAND;
 	if (mCommand.rfind("w ", 0) == 0) {
-		return save(2) ? ParserResult::UPDATE : ParserResult::ERROR;
+		return save(2) ? ParserResult::UPDATE : (outMode = Mode::ERROR, ParserResult::UPDATE);
 	}
 	if (mCommand.rfind("wq ") == 0) {
-		return save(3) ? ParserResult::QUIT : ParserResult::ERROR;
+		return save(3) ? ParserResult::QUIT : (outMode = Mode::ERROR, ParserResult::UPDATE);
 	}
 	return ParserResult::UNKNOWN;
 }
-ParserResult CommandParser::tryJump() {
+ParserResult CommandParser::tryJump(Mode&) {
 	string letters;
 	size_t pos = 0;
 	bool inDigits = false;

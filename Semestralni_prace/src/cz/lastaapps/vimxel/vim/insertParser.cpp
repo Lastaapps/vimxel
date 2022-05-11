@@ -25,10 +25,16 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 	}
 	case KEY_ENTER:
 	case '\n': {  // ENTER
-		saveContent();
-		mText = "";
-		mCursor = (size_t)-1;
-		outMode = Mode::NORMAL;
+		auto insertRes = mState->mTable->updateCell(mPos, mText);
+		if (insertRes.success) {
+			mText = "";
+			mCursor = (size_t)-1;
+			outMode = Mode::NORMAL;
+		} else {
+			mState->mErrorMsg = insertRes.message;
+			mState->mReturnMode = Mode::INSERT;
+			outMode = Mode::ERROR;
+		}
 		return Res::UPDATE;
 	}
 	case KEY_BACKSPACE: {
@@ -41,19 +47,19 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 		}
 		return Res::UPDATE;
 	}
-	case KEY_LEFT:{
-		if (mCursor != 0) mCursor --;
+	case KEY_LEFT: {
+		if (mCursor != 0) mCursor--;
 		return Res::UPDATE;
 	}
-	case KEY_RIGHT:{
-		if (mCursor < mText.length()) mCursor ++;
+	case KEY_RIGHT: {
+		if (mCursor < mText.length()) mCursor++;
 		return Res::UPDATE;
 	}
-	case KEY_UP:{
+	case KEY_UP: {
 		mCursor = 0;
 		return Res::UPDATE;
 	}
-	case KEY_DOWN:{
+	case KEY_DOWN: {
 		mCursor = mText.length();
 		return Res::UPDATE;
 	}
@@ -64,13 +70,6 @@ ParserResult InsertParser::handleKey(Mode& outMode) {
 		return Res::UPDATE;
 	}
 	return Res::NOPE;
-}
-
-void InsertParser::saveContent() {
-	if (mText.empty())
-		mState->mTable->updateCell(mPos, "");
-	else
-		mState->mTable->updateCell(mPos, mText);
 }
 
 bool InsertParser::checkLoad() {

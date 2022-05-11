@@ -27,9 +27,6 @@ ParserResult VimParser::handleKeyBoard() {
 	case ParserResult::UNKNOWN:
 		unknowsInfo();
 		break;
-	case ParserResult::ERROR:
-		errorInfo();
-		break;
 	case ParserResult::UPDATE:
 		updateInfo();
 		break;
@@ -62,6 +59,8 @@ AbsParser& VimParser::getParser() {
 		return commandParser;
 	case Mode::INSERT:
 		return insertParser;
+	case Mode::ERROR:
+		return errorParser;
 	default:
 		throw runtime_error("Unknown mode");
 	}
@@ -74,10 +73,6 @@ void VimParser::updateInfo() {
 }
 void VimParser::unknowsInfo() {
 	VimInfo info(-1, "Unknow command or key sequence", mMode);
-	notifyContracts(info);
-}
-void VimParser::errorInfo() {
-	VimInfo info(-1, mState.mErrorMsg, mMode);
 	notifyContracts(info);
 }
 

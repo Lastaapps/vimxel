@@ -65,7 +65,8 @@ void Storage::loadData(const string& path, shared_ptr<table::Table>& table) {
 		for (size_t x = 0; file; x++) {
 			bool lineEnd;
 			string cellContent = move(importText(file, lineEnd));
-			table->updateCell(table::Coordinates(x, y), cellContent);
+			auto insertRes = table->updateCell(table::Coordinates(x, y), cellContent);
+			if (!insertRes.success) throw invalid_argument("Cannot open file: "s + insertRes.message);
 			if (lineEnd) break;
 		}
 	}

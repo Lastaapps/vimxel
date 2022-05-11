@@ -10,6 +10,7 @@ enum class Mode {
     NORMAL,
     INSERT,
 	COMMAND,
+    ERROR,
 };
 string to_string(Mode m);
 }

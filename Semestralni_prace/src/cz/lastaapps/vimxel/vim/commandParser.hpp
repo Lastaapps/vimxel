@@ -16,9 +16,9 @@ class CommandParser final : public AbsParser {
     ParserResult handleKey(Mode & outMode) override;
     pair<string, size_t> getTextAndPosition() override;
     private:
-    ParserResult handleCommand();
-    ParserResult tryQuitAndWrite();
-    ParserResult tryJump();
+    ParserResult handleCommand(Mode& outMode);
+    ParserResult tryQuitAndWrite(Mode& outMode);
+    ParserResult tryJump(Mode& outMode);
 };
 }
 

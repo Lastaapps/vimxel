@@ -17,6 +17,10 @@ namespace cz::lastaapps::vimxel::table {
 
 enum class CellContentType {EMPTY, TEXT, ESCAPED, EXPRESSION};
 using CT = table::CellContentType;
+struct TableUpdateResult {
+	bool success = false;
+	string message;
+};
 
 class Table final {
    private:
@@ -32,7 +36,7 @@ class Table final {
 	Table(const Table&& other) = delete;
 	Table& operator=(const Table& other) = delete;
 	const Cell& getCell(const Coordinates& coord) const;
-	void updateCell(const Coordinates& coord, const string& content);
+	TableUpdateResult updateCell(const Coordinates& coord, const string& content);
 	void deleteCell(const Coordinates& coord);
 
 	shared_ptr<CellContract> createCellContract();

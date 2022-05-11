@@ -88,10 +88,11 @@ void Table::updateCellWithResult(const Coordinates& coord, SSingleTerm term) {
 	mMap.insert_or_assign(coord, make_unique<TextCell>(current.getContent(), term, false));
 }
 
-void Table::updateCell(const Coordinates& coord, const string& content) {
-	mChanged = true;
+TableUpdateResult Table::updateCell(const Coordinates& coord, const string& content) {
+	const string oldContent = getCell(coord).getContent();
 	destroyOldCell(coord);
 
+	try {
 	switch (isExpression(content)) {
 	case CT::EMPTY: {
 		deleteCell(coord);
@@ -124,6 +125,13 @@ void Table::updateCell(const Coordinates& coord, const string& content) {
 	}
 	default:
 		throw runtime_error("Unknown content type");
+	}
+	mChanged = true;
+	return TableUpdateResult{true, ""};
+	}
+	catch (exception& e) {
+		updateCell(coord, oldContent);
+		return TableUpdateResult{false, e.what()};
 	}
 }
 bool Table::tryParseNumber(const string& content, long double& out) {
@@ -222,6 +230,7 @@ void Table::createExecutionPlanRecursive(const Coordinates& coord, ExecutionArgs
 	bool hasBeenVisited = args.visited.find(coord) != args.visited.end();
 	if (hasBeenVisited) {
 		args.cycleRoots.insert(coord);
+		throw invalid_argument("Cycle found, invalid argument");
 		return;
 	}
 	args.visited.insert(coord);
