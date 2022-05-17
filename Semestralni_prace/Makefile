@@ -12,11 +12,13 @@ CXXFLAGS	=	-std=c++17 -pedantic -Wall -Wextra $(CXXFLAGSDEBUG)
 
 # External libraries used
 LIBS	=	-lncurses
+
 # Linker options
 ifeq ($(DEBUG), true)
 	LFLAGSDEBUG	= -fsanitize=address
 endif
-LFLAGS = $(LFLAGSDEBUG)
+LFLAGS = -lstdc++fs $(LFLAGSDEBUG)
+
 # My username, used as output filename
 USERNAME =	lastope2
 
@@ -41,10 +43,9 @@ TEST_DEPENDS := $(patsubst %.cpp,%.d,$(TEST_SOURCES))
 TEST_HEADERS := $(call rwildcard,tests/,*.hpp) $(call rwildcard,tests/,*.h) $(filter-out $(call rwildcard,src/,main.hpp) $(call rwildcard,src/,main.h), $(HEADERS))
 
 EXAMPLES := $(wildcard examples/**)
-ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) Doxyfile Makefile zadani.txt prohlaseni.txt
 
 # These task will be run also if files of their name exists
-.PHONY: default all compile run compile_test run_test doc zip clean
+.PHONY: default all compile run compile_test run_test doc clean
 
 
 
@@ -72,12 +73,12 @@ run_test:
 # --- COMPILATION --------------------------------------------------------------
 # link the final program
 $(USERNAME) : $(OBJECTS) Makefile
-	$(CXX) $(LFLAGS) $(LIBS) $(OBJECTS) -o $@
+	$(CXX) $(OBJECTS) -o $@ $(LFLAGS) $(LIBS)
 	@echo compiled!
 
 # link tests
 $(TEST_FILE) : $(TEST_OBJECTS) Makefile
-	$(CXX) $(LFLAGS) $(LIBS) $(TEST_OBJECTS) -o $@
+	$(CXX) $(TEST_OBJECTS) -o $@ $(LFLAGS) $(LIBS)
 	@echo compiled!
 
 # includes .d files as dependencies
@@ -101,17 +102,6 @@ doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile zadani.txt
 
 
 
-# --- ZIP ----------------------------------------------------------------------
-zip: $(USERNAME).zip
-
-$(USERNAME).zip: $(ZIP)
-	@mkdir -p zip_tmp/$(USERNAME)
-	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
-	cd zip_tmp/ && zip -r ../$@ $(USERNAME)/
-	@rm -fr zip_tmp
-
-
-
 
 # --- CLEAN UP -----------------------------------------------------------------
 # clean up
@@ -123,4 +113,32 @@ clean:
 	rm -f core
 	rm -fr doc
 	rm -f logs.txt err.txt
+
+
+
+# PRIVATE
+# this part get's removed, because some weido said we can use make commands only
+# so this part is in fact illegal, do it gets removed from zip
+.PHONY: zip lines
+
+# --- ZIP ----------------------------------------------------------------------
+ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) Doxyfile zadani.txt prohlaseni.txt
+
+zip: $(USERNAME).zip
+
+$(USERNAME).zip: $(ZIP) Makefile
+	@mkdir -p zip_tmp/$(USERNAME)
+	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
+	@cat Makefile | awk -f Makefile_filter.awk > zip_tmp/$(USERNAME)/Makefile
+	@cd zip_tmp/ && zip -r ../$@ $(USERNAME)/
+	@rm -fr zip_tmp
+	@echo $(USERNAME).zip created
+
+
+# --- LINE COUNT ---------------------------------------------------------------
+lines:
+	@echo Lines in project:
+	@cat $(SOURCES) $(HEADERS) | grep . | wc -l
+
+
 
