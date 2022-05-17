@@ -22,6 +22,8 @@ void Storage::saveData(shared_ptr<table::Table> table, const fs::path& path) {
 		}
 		file << LINE_DELIMITER;
 	}
+	if (file.fail() || file.bad())
+		throw runtime_error("Failed to save the file, it may be corrupted now!");
 	// drop latests \n
 	file.close();
 	size_t fileSize = fs::file_size(path);
@@ -45,6 +47,8 @@ void Storage::exportData(shared_ptr<table::Table> table, const fs::path& path) {
 		}
 		file << LINE_DELIMITER;
 	}
+	if (file.fail() || file.bad())
+		throw runtime_error("Failed to export to the file, it may be corrupted now!");
 	// drop latests \n
 	file.close();
 	size_t fileSize = fs::file_size(path);
@@ -65,9 +69,12 @@ void Storage::loadData(shared_ptr<table::Table>& table, const fs::path& path) {
 				if (lineEnd) break;
 			}
 		}
+		if (file.fail() || file.bad())
+			throw runtime_error("Failed to load the file!");
 		table->clearChanged();
 	} catch (exception& e) {
 		table->deleteAll();
+		table->clearChanged();
 		throw e;
 	}
 }

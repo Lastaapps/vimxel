@@ -11,10 +11,9 @@
 
 namespace cz::lastaapps::vimxel {
 
-int App::run(vector<string> args) {
+int App::run(const vector<string>& args) {
 	log("App started");
-	printArgs(args);
-	string filename = args.size() >= 2 ? args[1] : "";
+	const string filename = args.size() >= 2 ? args[1] : "";
 	initNCurses();
 	try {
 		log("Loading data");
@@ -40,7 +39,8 @@ int App::run(vector<string> args) {
 			}
 			vim::Res res = vim.handleKeyBoard();
 			if (res == vim::Res::QUIT) break;
-			this_thread::sleep_for(10ms);
+			if (res == vim::Res::NOPE)
+				this_thread::sleep_for(20ms);
 		}
 	} catch (const std::exception& ex) {
 		destroyNCurses();
@@ -62,20 +62,7 @@ int App::run(vector<string> args) {
 	return 0;
 }
 
-void App::printArgs(const vector<string>& args) {
-	mlog << "App args: ";
-	bool isFirst = true;
-	for (const auto& arg : args) {
-		if (isFirst)
-			isFirst = false;
-		else
-			mlog << ", ";
-		mlog << arg;
-	}
-	mlog << endl;
-}
-
-FileLoadResult App::loadTable(const string& filename) {
+App::FileLoadResult App::loadTable(const string& filename) {
 	auto table = shared_ptr<table::Table>(new table::Table);
 	try {
 		if (!filename.empty())

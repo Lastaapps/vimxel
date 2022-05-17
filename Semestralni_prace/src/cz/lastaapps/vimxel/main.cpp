@@ -1,8 +1,17 @@
-#include "app.hpp"
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "app.hpp"
+
 using namespace std;
 
+/**
+ * @brief Starts the program
+ * 
+ * @param cnt number of comandline args
+ * @param args command line args + executable file name
+ * @return int program result code
+ */
 int main(int cnt, char** args) {
 	vector<string> normal;
 	for (int i = 0; i < cnt; i++) {
