@@ -35,6 +35,7 @@ SOURCES := $(call rwildcard,src/,*.cpp)
 OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
 DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 HEADERS := $(call rwildcard,src/,*.hpp) $(call rwildcard,src/,*.h)
+ASSETS  := $(call rwildcard,assets/,*)
 
 TEST_FILE = test
 TEST_SOURCES := $(call rwildcard,tests/,*.cpp) $(filter-out $(call rwildcard,src/,main.cpp), $(SOURCES))
@@ -95,11 +96,8 @@ $(TEST_FILE) : $(TEST_OBJECTS) Makefile
 # Create documentation in the doc/ folder
 doc: doc/html/index.html
 
-doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile zadani.txt
-	@cp zadani.txt zadani.md
+doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile assets/README.md
 	@doxygen
-	@rm zadani.md
-
 
 
 
@@ -122,7 +120,7 @@ clean:
 .PHONY: zip lines
 
 # --- ZIP ----------------------------------------------------------------------
-ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) Doxyfile zadani.txt prohlaseni.txt
+ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt assets
 
 zip: $(USERNAME).zip
 

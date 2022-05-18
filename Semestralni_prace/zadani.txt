@@ -81,3 +81,48 @@ Použití polymorfismu (doporučeně)
 - funkce s neomezeným počtem parametrů
 - konstanty
 - navigace a ovládání pomocí základní vi syntaxe
+
+
+
+## Návrh polymorfismu
+
+### Buňky
+různé druhy buňek
+- prázdná
+- s obsahem, tj. textová/číselná
+
+### Výrazy Výraz bude převeden na binární strom, který bude postupně
+vyhodnocován.  Každý node stromu může být
+- nosič termu
+- operátor
+    ***
+    - binární operátor nebo funkce
+        - +, -, *, /
+        - pow, sqrt, ...
+    - unární operátor nebo funkce
+        - +, -
+        - sin, arcsin, ...
+        - exp, ln, ...
+        - lower, upper
+    - funkce n proměnných
+        - avg, sum, ...
+        - concat
+
+*** Dělení na operátory na číslech, textech a oblastích zde pro jednoduchost
+vynechám. Takovéto dělení mi umožní kontrolovat vstupy na 1 místě a v nodech
+provádět pouze výpočty, nekontrolovat typ vstupů.
+
+Každý node má metodu getValue(), která vypočte hodnotu za použití getValue()
+svých potomků.
+
+### Term
+Term může být
+- číslo (floating)
+- text
+- skupina termů (oblast tabulky)
+
+### A další
+- různé druhy chyb
+- různé dekodéry vtupu z klávesnice podle Vim módu
+- nadřída drawer poskytující společné rozhraní pro vyhreslování jednotlivých částí UI
+- různé payloady tokenů při parsování výrazu buňky
