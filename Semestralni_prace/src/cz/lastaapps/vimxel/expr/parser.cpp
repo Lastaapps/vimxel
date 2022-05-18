@@ -11,7 +11,10 @@ STerm Parser::evaluate() {
 	nextToken();
 	if (mToken->type == TT::NONE)
 		throw invalid_argument("Empty exression");
-	return evE()->getValue();
+	auto tree = evE();
+	if (mToken->type != TT::NONE)
+		throw invalid_argument("Wrong ending or not opened bracket");
+	return tree->getValue();
 }
 
 void Parser::nextToken() {
@@ -131,7 +134,7 @@ bool Parser::evFBrackets(SNode& out) {
 			throw invalid_argument("Empty "s + c1 + c2 + " brackers");
 		out = evE();
 		if (mToken->type != end)
-			throw invalid_argument("Bracked  "s + c1 + c2 + " not ended");
+			throw invalid_argument("Bracket "s + c1 + c2 + " not ended");
 		nextToken();
 		return true;
 	};

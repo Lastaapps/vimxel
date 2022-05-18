@@ -120,7 +120,7 @@ clean:
 .PHONY: zip lines
 
 # --- ZIP ----------------------------------------------------------------------
-ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt
+ZIP := $(SOURCES) $(HEADERS) $(TEST_SOURCES) $(TEST_HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt
 
 zip: $(USERNAME).zip
 

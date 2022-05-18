@@ -4,7 +4,7 @@ H1;Q1;A13;I13;;;;b;3;sqrt(a);=sqrt(I1);ceil(a/b);=ceil(I1/I2);;;;0;=0;cos;=cos(R
 ;;;;;;;=concat(I1, ' + ', I2, ' = ', I1 + I2);;pow(e, b);=pow(e, I2);trunc(a/b);=trunc(I1/I2);;;;pi;=pi;cot;=cot(R1)
 ;;;;;;;=concat(I1, '+', I2, '*', I3, '=', I1 + I2 * I3);;log2(K1);=log2(K1);round(pi);=round(pi);;;;3*pi/2;=3*pi/2;;
 ;;;;;;;=concat('(', I1, '+', I2, ')*', I3, '=', (I1 + I2) * I3);;;;round(e);=round(e);;;;;;asin(sin(a));=arcsin(sin(R1))
-;;;;;;;;;;;;;;;;;;acos(cos(a));=acos(cos(R1))
+;;;;;;;=abs(I7) * 2;=I1 * I2;;;;;;;;;;acos(cos(a));=acos(cos(R1))
 ;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;
 +;------------;+           ;;;;;;;;;;;;;;;;;

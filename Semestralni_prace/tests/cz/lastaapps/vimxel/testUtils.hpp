@@ -1,41 +1,40 @@
-#ifndef H_TEST_UTILS
-#define H_TEST_UTILS
+#pragma once
+
 #include <cassert>
 #include <iostream>
 #include <string>
-
 
 using namespace std;
 namespace cz::lastaapps::vimxel {
 
 /*void printEscapeSpecial(ostream & out, const string & str) {
-	for (auto it = str.begin(); it != str.end(); it++) {
-		const char c = *it;
-		switch(c) {
-			case '\n': out << "\\n";
-			    break;
-		    case '\t': out << "\\t";
-			    break;
-		    default: out << c;
-		}
-	}
+    for (auto it = str.begin(); it != str.end(); it++) {
+        const char c = *it;
+        switch(c) {
+            case '\n': out << "\\n";
+                break;
+            case '\t': out << "\\t";
+                break;
+            default: out << c;
+        }
+    }
 }
 
 bool printIfDiffer(const string & message, const string& t1, const string& t2) {
-	if (t1 != t2) {
-		printEscapeSpecial(cout, message);
-		cout << ": ";
-		printEscapeSpecial(cout, t1);
-		cout << " x ";
-		printEscapeSpecial(cout, t2);
-		cout << endl;
-		return false;
-	}
-	return true;
+    if (t1 != t2) {
+        printEscapeSpecial(cout, message);
+        cout << ": ";
+        printEscapeSpecial(cout, t1);
+        cout << " x ";
+        printEscapeSpecial(cout, t2);
+        cout << endl;
+        return false;
+    }
+    return true;
 }*/
 
 template <typename T>
-bool printIfDiffer(const string & message, const T& t1, const T& t2) {
+bool printIfDiffer(const string& message, const T& t1, const T& t2) {
 	if (t1 != t2) {
 		cout << message << ": " << t1 << " x " << t2 << endl;
 		return false;
@@ -70,8 +69,11 @@ T& pr(const string& message, T& any) {
 #define assPr(a, b) assert(printIfDiffer("Mismatch"s, (a), (b)));
 #define assPrMsg(s, a, b) assert(printIfDiffer((s), (a), (b)));
 
-#define shouldThrow(a) try {a; assert(false);}catch(...){}
+#define shouldThrow(a) \
+	try {              \
+		a;             \
+		assert(false); \
+	} catch (...) {    \
+	}
 
 }  // namespace cz::lastaapps::vimxel
-
-#endif
