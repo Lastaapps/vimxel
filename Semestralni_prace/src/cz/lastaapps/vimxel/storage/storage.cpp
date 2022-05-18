@@ -57,25 +57,28 @@ void Storage::exportData(shared_ptr<table::Table> table, const fs::path& path) {
 }
 
 void Storage::loadData(shared_ptr<table::Table>& table, const fs::path& path) {
+	table->deleteAll();
 	try {
 		ifstream file;
 		openFileForRead(path, file);
 		for (size_t y = 0; file; y++) {
 			for (size_t x = 0; file; x++) {
 				bool lineEnd;
-				string cellContent = move(importText(file, lineEnd));
-				auto insertRes = table->updateCell(table::Coordinates(x, y), cellContent);
-				if (!insertRes.success) throw invalid_argument("Cannot open file: "s + insertRes.message);
+				const string cellContent = importText(file, lineEnd);
+				const auto insertRes = table->updateCell(table::Coordinates(x, y), cellContent);
+				if (!insertRes.success)
+					throw invalid_argument("Cannot parse file: "s + insertRes.message);
 				if (lineEnd) break;
 			}
 		}
-		if (file.fail() || file.bad())
+		if (file.fail() && !file.eof())
 			throw runtime_error("Failed to load the file!");
 		table->clearChanged();
-	} catch (exception& e) {
+	} catch (exception* e) {
+		log(e->what());
 		table->deleteAll();
 		table->clearChanged();
-		throw e;
+		throw *e;
 	}
 }
 
@@ -108,7 +111,10 @@ string Storage::importText(istream& stream, bool& lineEnd) {
 	char c;
 	stream >> noskipws;
 	stream >> c;
-	if (!stream) return "";
+	if (!stream) {
+		lineEnd = true;
+		return "";
+	}
 	bool isEncapsulated = c == ENCAPSULATOR;
 	if (!isEncapsulated) {
 		stream.unget();
@@ -151,7 +157,7 @@ void Storage::openFileForWrite(const fs::path& str, ofstream& stream) {
 	stream = ofstream(str, ios::out | ios::trunc);
 }
 void Storage::openFileForRead(const fs::path& str, ifstream& stream) {
-	if (!fs::exists(fs::path(str)))
+	if (!fs::exists(str))
 		throw invalid_argument("File does not exists");
 	stream = ifstream(str, ios::in);
 }

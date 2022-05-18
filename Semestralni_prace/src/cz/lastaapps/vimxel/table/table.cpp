@@ -70,10 +70,6 @@ Coordinates Table::tableSize() const {
 bool Table::isEmpty() const {
 	return mMap.empty();
 }
-void Table::eraseAll() {
-	mMap.erase(mMap.begin(), mMap.end());
-	mChanged = true;
-}
 bool Table::changed() const {
 	return mChanged;
 }
@@ -101,7 +97,7 @@ void Table::updateCellWithResult(const Coordinates& coord, SSingleTerm term) {
 	mMap.insert_or_assign(coord, make_unique<TextCell>(current.getContent(), term, false));
 }
 
-TableUpdateResult Table::updateCell(const Coordinates& coord, const string& content) {
+Table::TableUpdateResult Table::updateCell(const Coordinates& coord, const string& content) {
 	const string oldContent = getCell(coord).getContent();
 	destroyOldCell(coord);
 
@@ -260,8 +256,8 @@ void Table::createExecutionPlanRecursive(const Coordinates& coord, ExecutionArgs
 	args.visited.erase(coord);
 }
 bool Table::ExecutionItem::operator<(const ExecutionItem& other) const {
-	if (size > other.size) return true;
-	if (size < other.size) return false;
+	if (index > other.index) return true;
+	if (index < other.index) return false;
 	return coord < other.coord;
 }
 
@@ -353,7 +349,7 @@ void Table::removeDependencies(const Coordinates& coord) {
 	}
 	mDependenciesInversed.erase(coord);
 }
-CellContentType Table::isExpression(const string& text) const {
+Table::CellContentType Table::isExpression(const string& text) const {
 	using CT = CellContentType;
 	if (text.empty()) return CT::EMPTY;
 	if (text[0] != '=') return CT::TEXT;

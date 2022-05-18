@@ -4,14 +4,14 @@ namespace cz::lastaapps::vimxel::table {
 
 // --- TextCell ---------------------------------------------------------------
 TextCell::TextCell(string content, SSingleTerm term, bool inCycle)
-: mContent(move(content)), mTerm(term), mInCycle(inCycle) {}
+    : mContent(move(content)), mTerm(term), mInCycle(inCycle) {}
 
 const string& TextCell::getContent() const {
 	return mContent;
 }
 string TextCell::getValue() const {
 	if (mInCycle) return "CYCLE!";
-	return mTerm -> toString();
+	return mTerm->toString();
 }
 SSingleTerm TextCell::getTerm() const {
 	if (mInCycle) return EMPTY_TERM;
@@ -23,7 +23,6 @@ bool TextCell::isInCycle() const {
 Cell* TextCell::clone() const {
 	return new TextCell(*this);
 }
-
 
 // --- EmptyCell --------------------------------------------------------------
 const string& EmptyCell::getContent() const { return emptyString; }
