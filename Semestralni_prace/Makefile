@@ -94,9 +94,9 @@ $(TEST_FILE) : $(TEST_OBJECTS) Makefile
 
 # --- DOCS ---------------------------------------------------------------------
 # Create documentation in the doc/ folder
-doc: doc/html/index.html
+doc: doc/index.html
 
-doc/html/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile assets/README.md
+doc/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile assets/README.md
 	@doxygen
 
 
@@ -120,11 +120,12 @@ clean:
 .PHONY: zip lines
 
 # --- ZIP ----------------------------------------------------------------------
-ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt assets
+ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt
 
 zip: $(USERNAME).zip
 
 $(USERNAME).zip: $(ZIP) Makefile
+	@rm -fr zip_tmp
 	@rm -f $(USERNAME).zip
 	@mkdir -p zip_tmp/$(USERNAME)
 	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
