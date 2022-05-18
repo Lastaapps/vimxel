@@ -1,4 +1,5 @@
 #include "mathOperatorNodes.hpp"
+
 #include <stdexcept>
 
 using namespace std;
@@ -19,15 +20,15 @@ STerm BinMinusNode::getValue() const {
 }
 
 // times
-string BinTimesNode::getName() const { return "times"; }
-STerm BinTimesNode::getValue() const {
+string TimesNode::getName() const { return "times"; }
+STerm TimesNode::getValue() const {
 	return make_shared<DoubleTerm>(
 	    castedLeft()->getValue() * castedRight()->getValue());
 }
 
 // divide
-string BinDivideNode::getName() const { return "divide"; }
-STerm BinDivideNode::getValue() const {
+string DivideNode::getName() const { return "divide"; }
+STerm DivideNode::getValue() const {
 	return make_shared<DoubleTerm>(
 	    castedLeft()->getValue() / castedRight()->getValue());
 }
@@ -41,7 +42,7 @@ STerm UnPlusNode::getValue() const {
 // minus unary
 string UnMinusNode::getName() const { return "unary minus"; }
 STerm UnMinusNode::getValue() const {
-	return make_shared<DoubleTerm>(-1 * casted() -> getValue());
+	return make_shared<DoubleTerm>(-1 * casted()->getValue());
 }
 
-}
+}  // namespace cz::lastaapps::vimxel::expr

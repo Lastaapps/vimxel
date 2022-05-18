@@ -71,19 +71,19 @@ bool Tokenizer::parseOperators(SToken& out) {
 		out = make_shared<Token>(TT::BRACKET_LS);
 		return true;
 	case ')':
-		out = make_shared<Token>(TT::BRACKER_RS);
+		out = make_shared<Token>(TT::BRACKET_RS);
 		return true;
 	case '[':
 		out = make_shared<Token>(TT::BRACKET_LM);
 		return true;
 	case ']':
-		out = make_shared<Token>(TT::BRACKER_RM);
+		out = make_shared<Token>(TT::BRACKET_RM);
 		return true;
 	case '{':
 		out = make_shared<Token>(TT::BRACKET_LL);
 		return true;
 	case '}':
-		out = make_shared<Token>(TT::BRACKER_RL);
+		out = make_shared<Token>(TT::BRACKET_RL);
 		return true;
 	}
 	mPos--;
@@ -108,7 +108,7 @@ bool Tokenizer::parseNumber(SToken& out) {
 			long double pow = 1;
 			while (true) {
 				if (mPos == mString.end())
-				break;
+					break;
 				if (!isdigit(c = *mPos++)) {
 					--mPos;
 					break;

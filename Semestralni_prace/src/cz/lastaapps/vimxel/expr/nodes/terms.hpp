@@ -7,12 +7,26 @@
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
 
+/**
+ * @brief Represents result of a calculation or cell value
+ */
 struct Term {
 	virtual ~Term() = default;
+	/**
+	 * @brief Gets string representation of the term
+	 * 
+	 * @return string representation 
+	 */
 	virtual string toString() const = 0;
 };
+/**
+ * @brief Group of terms with single value, opposite to area
+ */
 struct SingleTerm : public Term {};
 
+/**
+ * @brief Term holding double value
+ */
 class DoubleTerm final : public SingleTerm {
 	const long double mValue;
 
@@ -22,6 +36,9 @@ class DoubleTerm final : public SingleTerm {
 	string toString() const override;
 };
 
+/**
+ * @brief Term holding text value
+ */
 class TextTerm final : public SingleTerm {
 	const string mValue;
 
@@ -31,6 +48,9 @@ class TextTerm final : public SingleTerm {
 	string toString() const override;
 };
 
+/**
+ * @brief Term holding area - list of terms
+ */
 class AreaTerm final : public Term {
 	using SSingleTerm = shared_ptr<SingleTerm>;
 	const vector<SSingleTerm> mValue;

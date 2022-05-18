@@ -7,7 +7,7 @@ namespace cz::lastaapps::vimxel::expr {
 Parser::Parser(STokenzizer tokenizer, function<SSingleTerm(const table::Coordinates&)> dataProvider)
     : mTokenizer(tokenizer), mProvider(dataProvider) {}
 
-STerm Parser::evaulate() {
+STerm Parser::evaluate() {
 	nextToken();
 	if (mToken->type == TT::NONE)
 		throw invalid_argument("Empty exression");
@@ -41,10 +41,10 @@ SNode Parser::evT() {
 		switch (mToken->type) {
 			mcase(TT::TIMES, {
 				nextToken();
-				node = make_shared<BinTimesNode>(node, evF());
+				node = make_shared<TimesNode>(node, evF());
 			}) mcase(TT::DIVIDE, {
 				nextToken();
-				node = make_shared<BinDivideNode>(node, evF());
+				node = make_shared<DivideNode>(node, evF());
 			}) mcase(TT::MODULO, {
 				nextToken();
 				node = make_shared<ModuloNode>(node, evF());
@@ -136,9 +136,9 @@ bool Parser::evFBrackets(SNode& out) {
 		return true;
 	};
 
-	if (handleBracket(TT::BRACKET_LS, TT::BRACKER_RS, '(', ')')) return true;
-	if (handleBracket(TT::BRACKET_LM, TT::BRACKER_RM, '[', ']')) return true;
-	if (handleBracket(TT::BRACKET_LL, TT::BRACKER_RL, '{', '}')) return true;
+	if (handleBracket(TT::BRACKET_LS, TT::BRACKET_RS, '(', ')')) return true;
+	if (handleBracket(TT::BRACKET_LM, TT::BRACKET_RM, '[', ']')) return true;
+	if (handleBracket(TT::BRACKET_LL, TT::BRACKET_RL, '{', '}')) return true;
 	return false;
 }
 
@@ -153,7 +153,7 @@ bool Parser::evFFunctions(SNode& out) {
 	if (evFFunctionsCheck<TT::LOG, 2, LogNode>(out)) return true;
 
 	if (evFFunctionsCheck<TT::ROUND, 1, RoundNode>(out)) return true;
-	if (evFFunctionsCheck<TT::CEIL, 1 ,CeilNode>(out)) return true;
+	if (evFFunctionsCheck<TT::CEIL, 1, CeilNode>(out)) return true;
 	if (evFFunctionsCheck<TT::FLOOR, 1, FloorNode>(out)) return true;
 	if (evFFunctionsCheck<TT::TRUNC, 1, TruncNode>(out)) return true;
 
@@ -175,7 +175,7 @@ bool Parser::evFFunctions(SNode& out) {
 	if (evFFunctionsCheck<TT::LOWER, 1, LowerNode>(out)) return true;
 	if (evFFunctionsCheck<TT::UPPER, 1, UpperNode>(out)) return true;
 
-	//if (evFFunctionsCheck<TT::>(out)) return true;
+	// if (evFFunctionsCheck<TT::>(out)) return true;
 	return false;
 }
 template <TT type, size_t size, typename Name>
@@ -197,10 +197,10 @@ pair<bool, vector<SNode>> Parser::evFFunctionsOperands(const TT type) {
 	if (mToken->type != TT::BRACKET_LS)
 		throw invalid_argument("Function without () brackets");
 	nextToken();
-	if (mToken->type != TT::BRACKER_RS) {
+	if (mToken->type != TT::BRACKET_RS) {
 		while (true) {
 			nodes.emplace_back(evE());
-			if (mToken->type == TT::BRACKER_RS)
+			if (mToken->type == TT::BRACKET_RS)
 				break;
 			if (mToken->type == TT::COMMA) {
 				nextToken();

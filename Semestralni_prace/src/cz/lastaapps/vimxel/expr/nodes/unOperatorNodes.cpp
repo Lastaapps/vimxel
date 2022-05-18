@@ -9,7 +9,7 @@ namespace cz::lastaapps::vimxel::expr {
 UnOpNode::UnOpNode(SNode child)
     : mChild(child) {}
 UnOpNode::UnOpNode(const vector<SNode>& args)
-    : mChild(args[0]) {}
+    : mChild(args.size() == 1 ? args[0] : throw invalid_argument("Cannot pass more args to unary operator")) {}
 
 // unary number operator
 shared_ptr<DoubleTerm> UnOpNumNode::casted() const {

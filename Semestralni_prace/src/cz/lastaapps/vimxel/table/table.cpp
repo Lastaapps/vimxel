@@ -284,7 +284,7 @@ void Table::evaluateCell(const Coordinates& coord, const CycleRootsSet& cycleRoo
 		return getCell(coord).getTerm();
 	};
 	expr::Parser p(tokenizer, termProvieder);
-	auto term = p.evaulate();
+	auto term = p.evaluate();
 	auto singleTerm = dynamic_pointer_cast<expr::SingleTerm>(term);
 	if (singleTerm == nullptr)
 		throw invalid_argument("Area reference cannot be saved in a cell");

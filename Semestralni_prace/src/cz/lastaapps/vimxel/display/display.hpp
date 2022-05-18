@@ -81,7 +81,7 @@ class Display final {
 
    private:
 	// table size constants
-	static constexpr size_t cellWidth = 8;
+	static constexpr size_t cellWidth = 12;
 	static constexpr size_t cellHeight = 1;
 	static constexpr size_t colNamesHeight = 1;
 	static constexpr size_t rowNamesWidth = 6;

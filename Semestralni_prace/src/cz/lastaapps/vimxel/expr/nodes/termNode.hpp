@@ -1,6 +1,7 @@
 #ifndef H_TERM_NODE
 #define H_TERM_NODE
 #include <memory>
+
 #include "node.hpp"
 #include "terms.hpp"
 
@@ -9,11 +10,15 @@ namespace cz::lastaapps::vimxel::expr {
 using STerm = shared_ptr<Term>;
 using SNode = shared_ptr<Node>;
 
+/**
+ * @brief This node just holds a term
+ */
 class TermNode final : public Node {
-    const STerm mTerm;
-    public:
-    TermNode(STerm term);
-    STerm getValue() const override;
+	const STerm mTerm;
+
+   public:
+	TermNode(STerm term);
+	STerm getValue() const override;
 };
 }  // namespace cz::lastaapps::vimxel::expr
 

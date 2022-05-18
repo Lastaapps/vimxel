@@ -125,6 +125,7 @@ ZIP := $(SOURCES) $(HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlasen
 zip: $(USERNAME).zip
 
 $(USERNAME).zip: $(ZIP) Makefile
+	@rm -f $(USERNAME).zip
 	@mkdir -p zip_tmp/$(USERNAME)
 	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
 	@cat Makefile | awk -f Makefile_filter.awk > zip_tmp/$(USERNAME)/Makefile

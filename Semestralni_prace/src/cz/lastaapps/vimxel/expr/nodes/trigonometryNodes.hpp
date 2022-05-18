@@ -1,5 +1,5 @@
-#ifndef H_MATH_FUN_NODE
-#define H_MATH_FUN_NODE
+#ifndef H_TRIGONOMETRY_NODE
+#define H_TRIGONOMETRY_NODE
 #include <memory>
 
 #include "binOperatorNodes.hpp"
@@ -13,82 +13,73 @@ using STerm = shared_ptr<Term>;
 using SNode = shared_ptr<Node>;
 
 /**
- * @brief Pow operation according to cmath
+ * @brief Sin according to cmath library
  */
-struct PowNode final : public BinOpNumNode {
-	using BinOpNumNode::BinOpNumNode;
-	string getName() const override;
-	STerm getValue() const override;
-};
-
-/**
- * @brief Sqrt operation according to cmath
- */
-struct SqrtNode final : public UnOpNumNode {
+struct SinNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief abs operation according to cmath
+ * @brief Cos according to cmath library
  */
-struct AbsNode final : public UnOpNumNode {
+struct CosNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief modulo operation according to cmath
+ * @brief Tan according to cmath library
  */
-struct ModuloNode final : public BinOpNumNode {
-	using BinOpNumNode::BinOpNumNode;
-	STerm getValue() const override;
-	string getName() const override;
-};
-
-/**
- * @brief exp operation according to cmath
- */
-struct ExponentialNode final : public UnOpNumNode {
+struct TanNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief ln operation according to cmath
+ * @brief Cot according to cmath library
  */
-struct LnNode final : public UnOpNumNode {
+struct CotNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief log2 operation according to cmath
+ * @brief arcsin according to cmath library
  */
-struct Log2Node final : public UnOpNumNode {
+struct ArcsinNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief log10 operation according to cmath
+ * @brief arccos according to cmath library
  */
-struct Log10Node final : public UnOpNumNode {
+struct ArccosNode final : public UnOpNumNode {
 	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };
 
 /**
- * @brief log operation, ln(a)/ln(b) according to cmath
+ * @brief arctan according to cmath library
  */
-struct LogNode final : public BinOpNumNode {
-	using BinOpNumNode::BinOpNumNode;
+struct ArctanNode final : public UnOpNumNode {
+	using UnOpNumNode::UnOpNumNode;
+	string getName() const override;
+	STerm getValue() const override;
+};
+
+/**
+ * @brief arccot according to cmath library
+ */
+struct ArccotNode final : public UnOpNumNode {
+	using UnOpNumNode::UnOpNumNode;
 	string getName() const override;
 	STerm getValue() const override;
 };

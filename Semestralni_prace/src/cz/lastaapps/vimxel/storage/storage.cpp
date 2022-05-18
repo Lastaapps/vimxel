@@ -74,11 +74,11 @@ void Storage::loadData(shared_ptr<table::Table>& table, const fs::path& path) {
 		if (file.fail() && !file.eof())
 			throw runtime_error("Failed to load the file!");
 		table->clearChanged();
-	} catch (exception* e) {
-		log(e->what());
+	} catch (exception& e) {
+		log(e.what());
 		table->deleteAll();
 		table->clearChanged();
-		throw *e;
+		throw runtime_error(e.what());
 	}
 }
 

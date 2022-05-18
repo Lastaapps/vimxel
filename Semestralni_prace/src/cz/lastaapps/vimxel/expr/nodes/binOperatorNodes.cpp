@@ -9,7 +9,7 @@ namespace cz::lastaapps::vimxel::expr {
 BinOpNode::BinOpNode(SNode left, SNode right)
     : mLeft(left), mRight(right) {}
 BinOpNode::BinOpNode(const vector<SNode>& args)
-    : mLeft(args[0]), mRight(args[1]) {}
+    : mLeft(args.size() == 2 ? args[0] : throw invalid_argument("Only two args can be passed into binary function")), mRight(args[1]) {}
 
 // binary number only
 shared_ptr<DoubleTerm> BinOpNumNode::castedLeft() const {

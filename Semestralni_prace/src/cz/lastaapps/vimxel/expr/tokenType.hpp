@@ -3,6 +3,10 @@
 
 using namespace std;
 namespace cz::lastaapps::vimxel::expr {
+
+/**
+ * @brief Represents all the possible types in expressions
+ */
 enum class TokenType {
     NONE, COMMA,
     // prior 0
@@ -13,10 +17,10 @@ enum class TokenType {
     // terms
     DOUBLE, TEXT, CELL, SELECTION,
     // brackets
-    BRACKET_LS, BRACKER_RS, // ()
-    BRACKET_LM, BRACKER_RM, // []
-    BRACKET_LL, BRACKER_RL, // {}
-    // constatns
+    BRACKET_LS, BRACKET_RS, // ()
+    BRACKET_LM, BRACKET_RM, // []
+    BRACKET_LL, BRACKET_RL, // {}
+    // constants
     PI, E, LIGHT_SPEED, GOLDEN_RATION,
     // functions
     POW, SQRT, ABS, EXP, LN, LOG2, LOG10, LOG,

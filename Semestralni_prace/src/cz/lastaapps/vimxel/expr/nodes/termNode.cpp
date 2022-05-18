@@ -6,6 +6,6 @@ namespace cz::lastaapps::vimxel::expr {
 TermNode::TermNode(STerm term)
     : mTerm(term) {}
 STerm TermNode::getValue() const {
-    return mTerm;
+	return mTerm;
 }
 }  // namespace cz::lastaapps::vimxel::expr

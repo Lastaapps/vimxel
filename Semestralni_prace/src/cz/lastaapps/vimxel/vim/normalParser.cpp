@@ -51,6 +51,7 @@ ParserResult NormalParser::handleKey(Mode& outMode) {
 		mState->mDisplayState->moveViewX(true);
 		return Res::UPDATE;
 	case 'x': {
+		mState->mClipboard = mState->mTable->getCell(mState->mPos).getContent();
 		mState->mTable->updateCell(mState->mPos, "");
 		return Res::UPDATE;
 	}
@@ -64,6 +65,7 @@ ParserResult NormalParser::handleKey(Mode& outMode) {
 	}
 	case 'c':
 	case 's': {
+		mState->mClipboard = mState->mTable->getCell(mState->mPos).getContent();
 		mState->mTable->updateCell(mState->mPos, "");
 		outMode = Mode::INSERT;
 		return Res::UPDATE;
