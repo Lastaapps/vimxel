@@ -18,12 +18,16 @@ ParserResult CommandParser::handleKey(Mode& outMode) {
 
 	switch (ch) {
 	case 27: {  // ESC
+		mHistoryIndex = 0;
 		mCommand = "";
 		outMode = Mode::NORMAL;
 		return Res::UPDATE;
 	}
 	case KEY_ENTER:
 	case '\n': {  // ENTER
+		mHistory.emplace_back(mCommand);
+		mHistoryIndex = 0;
+
 		Res res = handleCommand(outMode);
 		if (res != Res::ERROR && res != Res::UNKNOWN) {
 			// mCommand = "";
@@ -37,12 +41,39 @@ ParserResult CommandParser::handleKey(Mode& outMode) {
 			mCommand.erase(--mCommand.end());
 		return Res::UPDATE;
 	}
+	case KEY_UP: {
+		browseHistory(true);
+		return Res::UPDATE;
+	}
+	case KEY_DOWN: {
+		browseHistory(false);
+		return Res::UPDATE;
+	}
 	}
 	if (' ' <= ch && ch <= '~') {
 		mCommand += ch;
 		return Res::UPDATE;
 	}
 	return Res::NOPE;
+}
+
+void CommandParser::browseHistory(const bool inc) {
+	if (!inc && mHistoryIndex == 0) {
+		mCommand = "";
+		mLatest = "";
+		return;
+	}
+
+	if (mHistoryIndex == 0) mLatest = mCommand;
+
+	if (inc && mHistoryIndex != mHistory.size()) {
+		++mHistoryIndex;
+	} else if (!inc) {
+		--mHistoryIndex;
+	}
+
+	if (mHistoryIndex == 0) mCommand = mLatest;
+	else mCommand = mHistory[mHistory.size() - mHistoryIndex];
 }
 
 ParserResult CommandParser::handleCommand(Mode& outMode) {
@@ -101,7 +132,7 @@ ParserResult CommandParser::tryQuitAndWrite(Mode& outMode) {
 			return false;
 		}
 		if (mState->mFilename == "") mState->mFilename = filename;
-		storage::Storage::saveData(mState->mTable, mState->mFilename);
+		storage::Storage::saveData(mState->mTable, filename);
 		mState->mTable->clearChanged();
 		return true;
 	};

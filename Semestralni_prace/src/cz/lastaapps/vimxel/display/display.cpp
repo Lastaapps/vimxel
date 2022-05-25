@@ -77,18 +77,24 @@ void Display::updateDisplayConfig() {
 	contentDrawer = new ContentDrawer(contentWin, cellWidth, cellHeight, mPos, mViewPort, mCellContract);
 	vimDrawer = new VimDrawer(vimWin, mVimContract);
 }
+
 void Display::recreate() {
 	delWindows();
 	updateDisplayConfig();
 }
+
 void Display::draw() {
+	clear();
+	refresh();
 	drawSeparatingLines();
 	headerDrawer->draw();
 	rowDrawer->draw();
 	colDrawer->draw();
 	contentDrawer->draw();
 	vimDrawer->draw();
+	refresh();
 }
+
 void Display::updateViewPort() {
 	const table::Coordinates scrSize = getTerminalSize();
 	const table::Coordinates original = mViewPort;

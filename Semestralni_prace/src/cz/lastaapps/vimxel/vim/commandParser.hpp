@@ -13,8 +13,12 @@ using Res = vim::ParserResult;
  */
 class CommandParser final : public AbsParser {
    private:
+	// command history
+	vector<string> mHistory;
+	size_t mHistoryIndex = 0;
 	// command buffer
 	string mCommand = "";
+	string mLatest = "";
 	// shared state
 	VimState* mState;
 
@@ -29,7 +33,7 @@ class CommandParser final : public AbsParser {
 	 * @brief Adds a char to buffer, deletes it ot tries to execute command
 	 *
 	 * @param outMode next mode, error or normal
-	 * @return resutl depending of key pressed
+	 * @return result depending of key pressed
 	 */
 	ParserResult handleKey(Mode& outMode) override;
 	/**
@@ -48,7 +52,13 @@ class CommandParser final : public AbsParser {
 	 */
 	Res handleCommand(Mode& outMode);
 	/**
-	 * @brief Tryies to handle :w and :q based command
+	 * @brief Brings command with index from history
+	 * 
+	 * @param inc if index should be increased else it is decreased
+	 */
+	void browseHistory(const bool inc);
+	/**
+	 * @brief Tries to handle :w and :q based command
 	 *
 	 * @param outMode next mode
 	 * @return UNKNOWN when no command is matched, others when found
@@ -62,7 +72,7 @@ class CommandParser final : public AbsParser {
 	 */
 	Res tryOpenFile(Mode& outMode);
 	/**
-	 * @brief Tryies to handle :exp command
+	 * @brief Tries to handle :exp command
 	 *
 	 * @param outMode next mode
 	 * @return UNKNOWN when no command is matched, others when found
