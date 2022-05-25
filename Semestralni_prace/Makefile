@@ -19,9 +19,6 @@ ifeq ($(DEBUG), true)
 endif
 LFLAGS = -lstdc++fs $(LFLAGSDEBUG)
 
-# My username, used as output filename
-USERNAME =	lastope2
-
 # all the source and generated files
 #
 # Creates a recursive make function
@@ -31,13 +28,13 @@ USERNAME =	lastope2
 # source: https://stackoverflow.com/a/12959764
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
+OUT_FILE = vimxel
 SOURCES := $(call rwildcard,src/,*.cpp)
 OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
 DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 HEADERS := $(call rwildcard,src/,*.hpp) $(call rwildcard,src/,*.h)
-ASSETS  := $(call rwildcard,assets/,*)
 
-TEST_FILE = test
+TEST_FILE = test_vimxel
 TEST_SOURCES := $(call rwildcard,tests/,*.cpp) $(filter-out $(call rwildcard,src/,main.cpp), $(SOURCES))
 TEST_OBJECTS := $(patsubst %.cpp,%.o,$(TEST_SOURCES))
 TEST_DEPENDS := $(patsubst %.cpp,%.d,$(TEST_SOURCES))
@@ -46,7 +43,7 @@ TEST_HEADERS := $(call rwildcard,tests/,*.hpp) $(call rwildcard,tests/,*.h) $(fi
 EXAMPLES := $(wildcard examples/**)
 
 # These task will be run also if files of their name exists
-.PHONY: default all compile run compile_test run_test doc clean
+.PHONY: default all compile run compile_test run_test doc clean lines
 
 
 
@@ -57,11 +54,11 @@ default:	all
 all:	compile doc
 
 # Build executable file
-compile:	$(USERNAME)
+compile:	$(OUT_FILE)
 
 # Runs compiled binary
 run:
-	@./$(USERNAME) 2> err.txt
+	@./$(OUT_FILE) 2> err.txt
 
 # Tests
 compile_test:	$(TEST_FILE)
@@ -73,7 +70,7 @@ run_test:
 
 # --- COMPILATION --------------------------------------------------------------
 # link the final program
-$(USERNAME) : $(OBJECTS) Makefile
+$(OUT_FILE) : $(OBJECTS) Makefile
 	$(CXX) $(OBJECTS) -o $@ $(LFLAGS) $(LIBS)
 	@echo compiled!
 
@@ -96,7 +93,7 @@ $(TEST_FILE) : $(TEST_OBJECTS) Makefile
 # Create documentation in the doc/ folder
 doc: doc/index.html
 
-doc/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile assets/README.md
+doc/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile README.md
 	@doxygen
 
 
@@ -105,34 +102,13 @@ doc/index.html: $(SOURCES) $(HEADERS) Doxyfile Makefile assets/README.md
 # clean up
 # delete .o files, .d files, final executable, doc and memory dumps
 clean:
-	rm -f $(USERNAME) $(USERNAME).zip
+	rm -f $(OUT_FILE) $(TEST_FILE)
 	rm -f $(OBJECTS) $(DEPENDS)
-	rm -f $(TEST_OBJECTS) $(TEST_DEPENDS) $(TEST_FILE)
+	rm -f $(TEST_OBJECTS) $(TEST_DEPENDS)
 	rm -f core
 	rm -fr doc
 	rm -f logs.txt err.txt
 
-
-
-# PRIVATE
-# this part get's removed, because some weido said we can use make commands only
-# so this part is in fact illegal, do it gets removed from zip
-.PHONY: zip lines
-
-# --- ZIP ----------------------------------------------------------------------
-ZIP := $(SOURCES) $(HEADERS) $(TEST_SOURCES) $(TEST_HEADERS) $(EXAMPLES) $(ASSETS) Doxyfile zadani.txt prohlaseni.txt
-
-zip: $(USERNAME).zip
-
-$(USERNAME).zip: $(ZIP) Makefile
-	@rm -fr zip_tmp
-	@rm -f $(USERNAME).zip
-	@mkdir -p zip_tmp/$(USERNAME)
-	@cp --parents -r $(ZIP) zip_tmp/$(USERNAME)
-	@cat Makefile | awk -f Makefile_filter.awk > zip_tmp/$(USERNAME)/Makefile
-	@cd zip_tmp/ && zip -r ../$@ $(USERNAME)/
-	@rm -fr zip_tmp
-	@echo $(USERNAME).zip created
 
 
 # --- LINE COUNT ---------------------------------------------------------------
