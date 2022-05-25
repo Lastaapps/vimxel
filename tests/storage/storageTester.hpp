@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "../../../../../src/cz/lastaapps/vimxel/storage/storage.hpp"
+#include "../../src/storage/storage.hpp"
 #include "../testUtils.hpp"
 
 using namespace std;

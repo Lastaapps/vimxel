@@ -3,8 +3,9 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <memory>
 
-#include "../../../../../src/cz/lastaapps/vimxel/expr/parser.hpp"
+#include "../../src/expr/parser.hpp"
 #include "../testUtils.hpp"
 
 using namespace std;

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "../../../../../src/cz/lastaapps/vimxel/table/table.hpp"
+#include "../../src/table/coordinate.hpp"
 #include "../testUtils.hpp"
 
 using namespace std;
@@ -12,14 +12,14 @@ using namespace cz::lastaapps::vimxel;
 namespace cz::lastaapps::vimxel::table {
 
 /**
- * @brief Tests that cycles cannot be inserted into a table
+ * @brief Tests conversion from coordinates to human readable form and back
  */
-struct CycleTester final {
+class CoordinatesTerster final {
+   public:
 	void operator()();
 
    private:
-	void insertComplexCycle();
-	void insertSelfCycle();
+	void testCoordinates();
+	string incStr(string str);
 };
-
 }  // namespace cz::lastaapps::vimxel::table
